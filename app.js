@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Listing = require("./models/listing.js") ;
 const method = require("method-override");
 const path = require("path") ;
+const ejsMate = require("ejs-mate");
 
 //database connection
     const mongo_url = 'mongodb://127.0.0.1:27017/wonderlust' ;
@@ -20,11 +21,15 @@ const path = require("path") ;
                 await mongoose.connect(mongo_url) ;
             }
 
-
+            
+app.engine('ejs', ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(method('_method'));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")) ;
+app.use(express.static(path.join(__dirname,"/public")))
+
+
 
 //routes
 app.get("/" , (req,res) =>{

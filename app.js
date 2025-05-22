@@ -32,8 +32,8 @@ app.use(express.static(path.join(__dirname,"/public")))
 
 
 //routes
-app.get("/" , (req,res) =>{
-    res.send("Hi ! I am root") ;
+app.get("/root" , (req,res) =>{
+    res.render("listings/home.ejs") ;
 })
 
 // app.get("/testListing" , async(req,res) =>{
@@ -57,6 +57,7 @@ app.get("/" , (req,res) =>{
 app.get("/listings", async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index", { allListings });
+
 });
 
 //New route

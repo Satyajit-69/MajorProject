@@ -4,7 +4,7 @@
   <div class="row col-8 mt-3">
 
     <h1>Edit the Listing</h1>
-    <form action="/listings/<%= listing.id %>" method="POST">
+    <form action="/listings/<%= listing.id %>?_method=PUT" method="POST">
       
  
 
@@ -30,7 +30,7 @@
     <div class="mb-3">
        <label for="image" class="form-label">Image</label>
        <input name="listing[image]"
-        value="<%= listing.image.url %>"
+        value="<%= listing.image %>"
         type="text"
         class="form-control"> 
     </div>

@@ -111,7 +111,14 @@ h2 {
 }
 
 .add-btn {
-    background-color:  rgb(187, 35, 35) !important;
+    background-color:  rgb(228, 2, 2) !important;
+    border: none !important;
+}
+
+
+
+.add-btn:hover {
+    background-color:  rgb(174, 36, 36) !important;
     border: none !important;
 }
 
@@ -192,4 +199,14 @@ h2 {
 .zoom-effect  a{
   animation: zoomInOut 3s ease-in-out 1;
   border: 1px solid black;
+}
+
+
+.show-image {
+  height: 100vh;
+}
+
+
+.btns {
+  display: flex;
 }

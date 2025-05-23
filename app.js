@@ -74,9 +74,14 @@ app.get("/listings/:id" , async( req ,res ) => {
     res.render("listings/show.ejs" ,{ listing } ) ;
 })
 
-//add route
+// Add route
 app.post("/listings", async (req, res) => {
-    const newListing = new Listing(req.body.listing);
+    const listingData = req.body.listing;
+    // Wrap image as object if it's a string
+    if (listingData.image && typeof listingData.image === "string") {
+        listingData.image = { url: listingData.image, filename: "listingimage" };
+    }
+    const newListing = new Listing(listingData);
     await newListing.save();
     res.redirect("/listings");
 });
@@ -90,11 +95,15 @@ app.get("/listings/:id/edit" , async(req,res) => {
      res.render("listings/edit.ejs" ,{listing}) ;
 })
 
-//update route
-app.put("/listings/:id" ,async (req,res) =>{
-      let {id} = req.params ;
-      await  Listing.findByIdAndUpdate(id,{...req.body.listing})
-      res.redirect(`/listings/${id}`);
+// Update route
+app.put("/listings/:id", async (req, res) => {
+    let { id } = req.params;
+    const listingData = req.body.listing;
+    if (listingData.image && typeof listingData.image === "string") {
+        listingData.image = { url: listingData.image, filename: "listingimage" };
+    }
+    await Listing.findByIdAndUpdate(id, listingData);
+    res.redirect(`/listings/${id}`);
 })
 
 //delete route

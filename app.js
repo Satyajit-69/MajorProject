@@ -5,6 +5,7 @@ const Listing = require("./models/listing.js") ;
 const method = require("method-override");
 const path = require("path") ;
 const ejsMate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsync.js") ;
 
 //database connection
     const mongo_url = 'mongodb://127.0.0.1:27017/wonderlust' ;
@@ -53,18 +54,33 @@ app.get("/root" , (req,res) =>{
 
 
 //index route
-
 app.get("/listings", async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index", { allListings });
 
 });
 
-//New route
+//New route 
 app.get("/listings/new" ,   (req,res) =>{
       res.render("listings/new.ejs") ;
 })
 
+
+// Add route / Create Route
+app.post("/listings", wrapAsync(async (req, res, next) => {
+    const listingData = req.body.listing;
+    // Ensure required fields
+    if (!listingData.title || !listingData.image) {
+        throw new Error("Title and Image are required!");
+    }
+    // Wrap image as object if it's a string
+    if (typeof listingData.image === "string") {
+        listingData.image = { url: listingData.image };
+    }
+    const newListing = new Listing(listingData);
+    await newListing.save();
+    res.redirect("/listings");
+}));
 
 //show route
 app.get("/listings/:id" , async( req ,res ) => {
@@ -73,18 +89,6 @@ app.get("/listings/:id" , async( req ,res ) => {
 
     res.render("listings/show.ejs" ,{ listing } ) ;
 })
-
-// Add route
-app.post("/listings", async (req, res) => {
-    const listingData = req.body.listing;
-    // Wrap image as object if it's a string
-    if (listingData.image && typeof listingData.image === "string") {
-        listingData.image = { url: listingData.image, filename: "listingimage" };
-    }
-    const newListing = new Listing(listingData);
-    await newListing.save();
-    res.redirect("/listings");
-});
 
 
 
@@ -114,6 +118,14 @@ app.delete("/listings/:id" , async(req,res) =>{
       res.redirect("/listings");
       
 })
+
+
+
+// Error handler middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error for debugging
+  res.status(500).send("Something went wrong! Please try again later.");
+});
 
 app.listen(3000,() =>{
   console.log("listening on port 3000");

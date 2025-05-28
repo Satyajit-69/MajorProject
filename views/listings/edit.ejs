@@ -14,7 +14,10 @@
          name="listing[title]" 
         value="<%= listing.title %>"
          type="text"
-         class="form-control"> 
+         class="form-control"/> 
+         <div class="valid-feedback">
+          Title looks good :
+         </div>
        </div>
     
 
@@ -30,7 +33,7 @@
     <div class="mb-3">
        <label for="image" class="form-label">Image</label>
        <input name="listing[image]"
-        value="<%= listing.image %>"
+        value="<%= listing.image.url %>"
         type="text"
         class="form-control"> 
     </div>
@@ -47,6 +50,11 @@
           value="<%= listing.price %>"
           type="number"
           class="form-control">
+
+          <div class="invalid-feedback">
+           Looks good!
+          </div>
+
        </div>
     
 

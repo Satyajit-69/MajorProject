@@ -1,35 +1,90 @@
 <% layout('/layouts/boilerplate') -%>
 <div class="container mt-5 col-md-8">
     <h1 class="mb-4 text-center">Create a New Listing</h1>
-    <form action="/listings" method="POST">
+    <form action="/listings" method="POST"class="needs-validation" novalidate >
+
+
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input name="listing[title]" type="text" class="form-control" placeholder="Enter title" required>
+            <input name="listing[title]" 
+             type="text" 
+             class="form-control" 
+             placeholder="Enter title" 
+             required>
+
+            <div class="valid-feedback"> Looks good! </div>
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea name="listing[description]" class="form-control" placeholder="Enter description" required></textarea>
+            <textarea name="listing[description]"
+             class="form-control"
+             placeholder="Enter description" 
+             required>
+            </textarea>
+
+            <!-- <div class="valid-feedback">Description is good</div> -->
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">Image URL</label>
-            <input name="listing[image]" type="text" class="form-control" placeholder="Enter image URL" required>
+            <input name="listing[image]" 
+             type="text" 
+             class="form-control" 
+             placeholder="Enter image URL">
+
+             
         </div>
         <div class="row">
             <div class="mb-3 col-md-6">
                 <label for="price" class="form-label">Price</label>
-                <input name="listing[price]" type="number" class="form-control" placeholder="Enter price" required>
+                <input name="listing[price]" 
+                 type="number"
+                 class="form-control"
+                 placeholder="Enter price" 
+                 required>
+                 
+                <div class="invalid-feedback">
+                  Please enter a valid price :|
+                </div>
             </div>
             <div class="mb-3 col-md-6">
                 <label for="country" class="form-label">Country</label>
-                <input name="listing[country]" type="text" class="form-control" placeholder="Enter country" required>
+                <input name="listing[country]" 
+                 type="text"
+                 class="form-control"
+                 placeholder="Enter country" required>
+
+
+                 <div class="invalid-feedback"> Enter a valid country :|  </div>
             </div>
         </div>
         <div class="mb-3">
             <label for="location" class="form-label">Location</label>
-            <input name="listing[location]" type="text" class="form-control" placeholder="Enter location" required>
+            <input name="listing[location]" 
+             type="text" 
+             class="form-control" 
+             placeholder="Enter location" required>
+
+             <div class="invalid-feedback"> Enter a valid location </div>
         </div>
-        <button type="submit" class="btn btn-success">Add Listing</button>
+        <button type="submit" class="btn btn-success mb-4">Add Listing</button>
     </form>
 </div>
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
 
 

@@ -1,132 +1,115 @@
-const express = require("express") ;
-const app = express() ;
+const express = require("express");
+const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js") ;
-const method = require("method-override");
-const path = require("path") ;
+const Listing = require("./models/listing");
+const methodOverride = require("method-override");
+const path = require("path");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js") ;
+const wrapAsync = require("./utils/wrapAsync");
+const ExpressError = require("./utils/ExpressError");
 
-//database connection
-    const mongo_url = 'mongodb://127.0.0.1:27017/wonderlust' ;
+// Connect to MongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/wonderlust", {})
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
-        main()
-            .then(() =>{
-                console.log("connected to the database");
-            })
-            .catch((err) =>{
-                console.log(err) ;
-            })
-
-        async function main() {
-                await mongoose.connect(mongo_url) ;
-            }
-
-            
-app.engine('ejs', ejsMate);
-app.use(express.urlencoded({ extended: true }));
-app.use(method('_method'));
+// View engine setup
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views")) ;
-app.use(express.static(path.join(__dirname,"/public")))
+app.set("views", path.join(__dirname, "views"));
 
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
 
-
-//routes
-app.get("/root" , (req,res) =>{
-    res.render("listings/home.ejs") ;
-})
-
-// app.get("/testListing" , async(req,res) =>{
-//     let sample = new Listing ( {
-//         title : "New Banglo",
-//         description : "By the beach" ,
-//         price : 120 ,
-//         location : "Kolkata , West Bengal" ,
-//         country : "India"
-//         })
-
-//     await sample.save();
-//     console.log("sample was saved");
-//     res.send("successful testing") ;
-
-// })
-
-
-//index route
-app.get("/listings", async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index", { allListings });
-
+// Home Route
+app.get("/", (req, res) => {
+  res.redirect("/listings");
 });
 
-//New route 
-app.get("/listings/new" ,   (req,res) =>{
-      res.render("listings/new.ejs") ;
-})
-
-
-// Add route / Create Route
-app.post("/listings", wrapAsync(async (req, res, next) => {
-    const listingData = req.body.listing;
-    // Ensure required fields
-    if (!listingData.title || !listingData.image) {
-        throw new Error("Title and Image are required!");
-    }
-    // Wrap image as object if it's a string
-    if (typeof listingData.image === "string") {
-        listingData.image = { url: listingData.image };
-    }
-    const newListing = new Listing(listingData);
-    await newListing.save();
-    res.redirect("/listings");
+// Index - All Listings
+app.get("/listings", wrapAsync(async (req, res) => {
+  const listings = await Listing.find({});
+  res.render("listings/index", { allListings: listings });
 }));
 
-//show route
-app.get("/listings/:id" , async( req ,res ) => {
-    let  { id } = req.params ;
-    const listing = await Listing.findById(id) ;
-
-    res.render("listings/show.ejs" ,{ listing } ) ;
-})
-
-
-
-//Edit route 
-app.get("/listings/:id/edit" , async(req,res) => {
-     const {id} = req.params ;
-     const listing =  await Listing.findById(id) ;
-     res.render("listings/edit.ejs" ,{listing}) ;
-})
-
-// Update route
-app.put("/listings/:id", async (req, res) => {
-    let { id } = req.params;
-    const listingData = req.body.listing;
-    if (listingData.image && typeof listingData.image === "string") {
-        listingData.image = { url: listingData.image, filename: "listingimage" };
-    }
-    await Listing.findByIdAndUpdate(id, listingData);
-    res.redirect(`/listings/${id}`);
-})
-
-//delete route
-app.delete("/listings/:id" , async(req,res) =>{
-       let {id} = req.params ;
-      let deleted = await  Listing.findByIdAndDelete(id) ;
-      console.log(deleted);
-      res.redirect("/listings");
-      
-})
-
-
-
-// Error handler middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack); // Log the error for debugging
-  res.status(500).send("Something went wrong! Please try again later.");
+// New Listing Form
+app.get("/listings/new", (req, res) => {
+  res.render("listings/new");
 });
 
-app.listen(3000,() =>{
-  console.log("listening on port 3000");
-})
+// Create Listing
+app.post("/listings", wrapAsync(async (req, res, next) => {
+  const listingData = req.body.listing;
+  if (!listingData) {
+    throw new ExpressError(400, "Invalid listing data!");
+  }
+  // Ensure image is always an object
+  if (listingData.image && typeof listingData.image === "string") {
+    listingData.image = { url: listingData.image };
+  }
+  const listing = new Listing(listingData);
+  await listing.save();
+  res.redirect("/listings");
+}));
+
+// Show Listing
+app.get("/listings/:id", wrapAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    throw new ExpressError(404, "Listing not found");
+  }
+  res.render("listings/show", { listing });
+}));
+
+// Edit Form
+app.get("/listings/:id/edit", wrapAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    throw new ExpressError(404, "Listing not found");
+  }
+  res.render("listings/edit", { listing });
+}));
+
+// Update Listing
+app.put("/listings/:id", wrapAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const listingData = req.body.listing;
+  if (listingData.image && typeof listingData.image === "string") {
+    listingData.image = { url: listingData.image };
+  }
+  await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });
+  res.redirect(`/listings/${id}`);
+}));
+
+// Delete Listing
+app.delete("/listings/:id", wrapAsync(async (req, res) => {
+  const { id } = req.params;
+  await Listing.findByIdAndDelete(id);
+  res.redirect("/listings");
+}));
+
+// Test Error Route
+app.get("/error-test", (req, res) => {
+  throw new Error("This is a test error!");
+});
+
+app.use((req, res) => {
+  res.status(404).render("listings/error.ejs", { message: "Page Not Found" });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  const status = err.status || 500;
+  const message = err.message || "Something went wrong";
+  res.status(status).render("listings/error.ejs", { message });
+});
+
+// Start Server
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});

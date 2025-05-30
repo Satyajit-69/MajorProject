@@ -1,30 +1,22 @@
-const mongoose = require("mongoose") ;
-const initData = require("./data.js") ;
-const Listing = require("../models/listing.js") ;
+const mongoose = require("mongoose");
+const initData = require("./data.js");
+const Listing = require("../models/listing.js");
 
+const mongo_url = 'mongodb://127.0.0.1:27017/wonderlust';
 
+async function main() {
+    try {
+        await mongoose.connect(mongo_url);
+        console.log("Connected to the database");
 
-//database connection
-const mongo_url = 'mongodb://127.0.0.1:27017/wonderlust' ;
+        await Listing.deleteMany({}); // Clean the data
+        await Listing.insertMany(initData.data); // Insert new data
+        console.log("Data was initialized");
 
-    main()
-        .then(() =>{
-            console.log("connected to the database");
-        })
-        .catch((err) =>{
-            console.log(err) ;
-        })
+        mongoose.connection.close(); // Optional: close connection after seeding
+    } catch (err) {
+        console.log(err);
+    }
+}
 
-    async function main() {
-            await mongoose.connect(mongo_url) ;
-        }
-
-
-
-        const initDB = async () =>{
-            await Listing.deleteMany({}) ; //clean the datas
-            await Listing.insertMany(initData.data) ; //insert new data
-            console.log("data was initialized");
-        }
-
-        initDB() ;
+main();

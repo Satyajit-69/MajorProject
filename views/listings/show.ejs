@@ -1,40 +1,31 @@
 <% layout('/layouts/boilerplate') -%>
-<body>
-
-    <div class="row">
-        <div class="col-8 offset-2 mt-3">
-             <h1>Listings details</h1>
-    
-            <div class="card">
-               <img src=  "<%=listing.image.url %>"
+<div class="row">
+    <div class="col-8 offset-2 mt-3">
+        <h1>Listing Details</h1>
+        <div class="card">
+            <img 
+                src="<%= listing.image?.url || '/default.jpg' %>"
                 alt="listing-img"
-               class="card-img-top show-img"
-               style="height: 20rem"
-               />
-                <div class="card-body">
+                class="card-img-top show-img"
+                style="height: 20rem"
+            />
+            <div class="card-body">
                 <p class="card-text">
-                    <b><%= listing.title %></b> <br>
-                    <%= listing.description  %> <br>
-                    &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") %> <br>
-                     <%= listing.location %> <br>
-                     <%= listing.country %> <br>
+                    <b><%= listing.title || "No Title" %></b> <br>
+                    <%= listing.description || "No description" %> <br>
+                    &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> <br>
+                    <%= listing.location || "No location" %> <br>
+                    <%= listing.country || "No country" %> <br>
                 </p>
             </div>
-            </div>
         </div>
-      </div>       
-       <br>
-       <div class="btns mb-3">
-                 <a href="/listings/<%= listing.id %>/edit" class=" btn btn-dark
-                    col-1 offset-2 add-btn">Edit</a>
-                 <br> 
-                <form action="/listings/<%= listing.id%>?_method=DELETE" method="POST">
-                <button class=" btn btn-dark offset-4">Delete</button>
-               </form>
-       </div>
-           
-          
-       
-   
-   
-</body>
+    </div>
+</div>
+<br>
+<div class="btns mb-3">
+    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-2 add-btn">Edit</a>
+    <br>
+    <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+        <button class="btn btn-dark offset-4">Delete</button>
+    </form>
+</div>

@@ -4,7 +4,7 @@
   <div class="row col-8 mt-3">
 
     <h1>Edit the Listing</h1>
-    <form action="/listings/<%= listing.id %>?_method=PUT" method="POST">
+    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST">
       
  
 
@@ -12,7 +12,7 @@
         <label for="title" class="form-label">Title</label>
         <input 
          name="listing[title]" 
-        value="<%= listing.title %>"
+         value="<%= listing.title %>"
          type="text"
          class="form-control"/> 
          <div class="valid-feedback">

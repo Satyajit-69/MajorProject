@@ -29,6 +29,21 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
+
+//listing validation
+const validateListing = (req,res,next) =>{
+let {error} = listingSchema.validate(req.body);
+    if(error) {
+      let errMsg = error.details[0].message;
+      console.log(errMsg) ;
+      throw new ExpressError(400,errMsg) ;
+      }
+      else {
+      next() ;
+    }
+}
+
+
 // Home Route
 app.get("/root", (req, res) => {
   res.render("listings/home");
@@ -52,12 +67,8 @@ app.get("/listings/new", (req, res) => {
 
 
 // Create Listing
-app.post("/listings", wrapAsync(async (req, res, next) => {
-  let result =  listingSchema.validate(req.body);
-  console.log(result);
-  if(result.error) {
-    throw new ExpressError(400,result.error);
-  }
+app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
+  if (!req.body.listing.image) req.body.listing.image = { url: "/default.avif" };
   const newlisting = new Listing(req.body.listing);
   await newlisting.save();
   res.redirect("/listings");
@@ -66,7 +77,7 @@ app.post("/listings", wrapAsync(async (req, res, next) => {
 
 
 // Show Listing
-app.get("/listings/:id", wrapAsync(async (req, res, next) => {
+app.get("/listings/:id" ,wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
   if (!listing) {
@@ -90,12 +101,10 @@ app.get("/listings/:id/edit", wrapAsync(async (req, res, next) => {
 
 
 // Update Listing
-app.put("/listings/:id", wrapAsync(async (req, res, next) => {
+app.put("/listings/:id", validateListing, wrapAsync(async (req, res, next) => {
   const { id } = req.params;
-  const listingData = req.body.listing;
-  if (listingData.image && typeof listingData.image === "string") {
-    listingData.image = { url: listingData.image };
-  }
+  let listingData = req.body.listing;
+  if (!listingData.image) listingData.image = { url: "/default.avif" };
   await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });
   res.redirect(`/listings/${id}`);
 }));
@@ -106,8 +115,10 @@ app.put("/listings/:id", wrapAsync(async (req, res, next) => {
 app.delete("/listings/:id", wrapAsync(async (req, res) => {
   const { id } = req.params;
   await Listing.findByIdAndDelete(id);
+  console.log("Deleted");
   res.redirect("/listings");
 }));
+
 
 
 
@@ -116,6 +127,7 @@ app.get("/error-test", (req, res) => {
   throw new Error("This is a test error!");
 });
 
+//Page not found - 404
 app.use((req, res) => {
   res.status(404).render("listings/error.ejs", { message: "Page Not Found" });
 });

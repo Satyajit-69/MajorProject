@@ -7,26 +7,34 @@ const path = require("path");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
+const {listingSchema} = require("./schema.js");
 
 // Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/wonderlust", {})
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
+
 // View engine setup
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+
+
 // Home Route
-app.get("/", (req, res) => {
-  res.redirect("/listings");
+app.get("/root", (req, res) => {
+  res.render("listings/home");
 });
+
+
 
 // Index - All Listings
 app.get("/listings", wrapAsync(async (req, res) => {
@@ -34,25 +42,28 @@ app.get("/listings", wrapAsync(async (req, res) => {
   res.render("listings/index", { allListings: listings });
 }));
 
+
+
 // New Listing Form
 app.get("/listings/new", (req, res) => {
   res.render("listings/new");
 });
 
+
+
 // Create Listing
 app.post("/listings", wrapAsync(async (req, res, next) => {
-  const listingData = req.body.listing;
-  if (!listingData) {
-    throw new ExpressError(400, "Invalid listing data!");
+  let result =  listingSchema.validate(req.body);
+  console.log(result);
+  if(result.error) {
+    throw new ExpressError(400,result.error);
   }
-  // Ensure image is always an object
-  if (listingData.image && typeof listingData.image === "string") {
-    listingData.image = { url: listingData.image };
-  }
-  const listing = new Listing(listingData);
-  await listing.save();
+  const newlisting = new Listing(req.body.listing);
+  await newlisting.save();
   res.redirect("/listings");
 }));
+
+
 
 // Show Listing
 app.get("/listings/:id", wrapAsync(async (req, res, next) => {
@@ -64,6 +75,8 @@ app.get("/listings/:id", wrapAsync(async (req, res, next) => {
   res.render("listings/show", { listing });
 }));
 
+
+
 // Edit Form
 app.get("/listings/:id/edit", wrapAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -73,6 +86,8 @@ app.get("/listings/:id/edit", wrapAsync(async (req, res, next) => {
   }
   res.render("listings/edit", { listing });
 }));
+
+
 
 // Update Listing
 app.put("/listings/:id", wrapAsync(async (req, res, next) => {
@@ -85,12 +100,16 @@ app.put("/listings/:id", wrapAsync(async (req, res, next) => {
   res.redirect(`/listings/${id}`);
 }));
 
+
+
 // Delete Listing
 app.delete("/listings/:id", wrapAsync(async (req, res) => {
   const { id } = req.params;
   await Listing.findByIdAndDelete(id);
   res.redirect("/listings");
 }));
+
+
 
 // Test Error Route
 app.get("/error-test", (req, res) => {
@@ -101,13 +120,17 @@ app.use((req, res) => {
   res.status(404).render("listings/error.ejs", { message: "Page Not Found" });
 });
 
+
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err);
   const status = err.status || 500;
-  const message = err.message || "Something went wrong";
+  const message = err.message || "something went wrong" ;
   res.status(status).render("listings/error.ejs", { message });
 });
+
+
 
 // Start Server
 app.listen(3000, () => {

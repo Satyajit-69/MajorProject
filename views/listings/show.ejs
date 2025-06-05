@@ -1,7 +1,7 @@
 <% layout('/layouts/boilerplate') -%>
 <div class="row">
     <div class="col-8 offset-2 mt-3">
-        <h1>Listing Details</h1>
+       <h2> <%= listing.title || "No Title" %> </h2>
         <div class="card">
             <img 
                 src="<%= listing.image?.url || '/default.jpg' %>"
@@ -11,7 +11,6 @@
             />
             <div class="card-body">
                 <p class="card-text">
-                    <b><%= listing.title || "No Title" %></b> <br>
                     <%= listing.description || "No description" %> <br>
                     &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> <br>
                     <%= listing.location || "No location" %> <br>
@@ -28,4 +27,21 @@
     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
         <button class="btn btn-dark offset-4">Delete</button>
     </form>
+</div>
+<br>  
+<div class="col-8 offset-2 outlines mb-3  reviews">
+ 
+    <h4> Leave -  a  - Review </h4>
+       <form action="" class="mb-3">
+         <div class="mb-3 mt-3">
+            <label for="rating">Rating</label>
+            <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+         </div>
+          <div  class="mb-3 mt-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea name="review[comment]" id="comment" cols="30" rows="5"
+            class="form-control"></textarea>
+         </div>
+           <button class="btn btn-outline-dark">Submit</button>
+       </form>
 </div>

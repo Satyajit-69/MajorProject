@@ -10,11 +10,11 @@ const listingSchema = new Schema({
   price: Number,
   location: String,
   country: String,
-  reviews : [
+  reviews: [
     {
-      type : Schema.Types.ObjectId ,
-      ref : "Review" ,
-    },
+      type: Schema.Types.ObjectId,
+      ref: "Review", // This must match mongoose.model("Review", ...)
+    }
   ]
 });
 

@@ -1,7 +1,7 @@
 <% layout('/layouts/boilerplate') -%>
 <div class="container mt-5 col-md-8">
     <h1 class="mb-4 text-center">Create a New Listing</h1>
-    <form action="/listings" method="POST"class="needs-validation" novalidate >
+    <form action="/listings" method="POST" class="needs-validation" novalidate >
 
 
         <div class="mb-3">
@@ -69,22 +69,6 @@
         <button type="submit" class="btn btn-success mb-4">Add Listing</button>
     </form>
 </div>
-<script>
-  // Example starter JavaScript for disabling form submissions if there are invalid fields
-  (function () {
-    'use strict'
-    var forms = document.querySelectorAll('.needs-validation')
-    Array.prototype.slice.call(forms)
-      .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-  })()
-</script>
+
 
 

@@ -56,13 +56,13 @@ h2 {
 
 .f-info{
     height: 8rem;
-    background-color: rgb(44, 41, 41);
+    background-color: rgba(178, 143, 143, 0.418);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     text-align: center;
     align-items: space-evenly;
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 
@@ -226,6 +226,11 @@ h2 {
 
 .outlines h4 {
   font-weight: 700;
+  display: flex;
+  justify-content: center;
+}
+
+.edit {
   display: flex;
   justify-content: center;
 }

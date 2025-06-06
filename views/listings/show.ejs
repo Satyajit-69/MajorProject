@@ -21,9 +21,8 @@
     </div>
 </div>
 <br>
-<div class="btns mb-3">
+<div class="btns mb-2">
     <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-2 add-btn">Edit</a>
-    <br>
     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
         <button class="btn btn-dark offset-4">Delete</button>
     </form>
@@ -32,7 +31,7 @@
 <div class="col-8 offset-2 outlines mb-3  reviews">
  
     <h4> Leave -  a  - Review </h4>
-       <form action="" class="mb-3">
+       <form action="/listings/<%= listing.id %>/reviews" class="mb-3" method="POST">
          <div class="mb-3 mt-3">
             <label for="rating">Rating</label>
             <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
@@ -44,4 +43,4 @@
          </div>
            <button class="btn btn-outline-dark">Submit</button>
        </form>
-</div>
+</div> 

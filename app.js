@@ -8,6 +8,8 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
 const {listingSchema} = require("./schema.js");
+const Reviews = require("./models/review.js") ;
+
 
 // Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/wonderlust", {})
@@ -120,12 +122,24 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 }));
 
 
+//Reviews 
+  //post
+  app.post("/listings/:id/reviews" , async (req,res) =>{
+      let listing = await Listing.findById(req.params.id) ;
+      let newReview = new Reviews(req.body.review) ;
+
+      listing.reviews.push(newReview) ;
+      await newReview.save()  ;
+      await listing.save() ;
+
+      console.log("New review saved") ;
+      res.redirect(`/listings/${listing.id}`) ;
 
 
-// Test Error Route
-app.get("/error-test", (req, res) => {
-  throw new Error("This is a test error!");
-});
+  }) ;
+
+
+
 
 //Page not found - 404
 app.use((req, res) => {

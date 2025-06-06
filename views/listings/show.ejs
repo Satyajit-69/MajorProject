@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-8 offset-2 mt-3">
        <h2> <%= listing.title || "No Title" %> </h2>
-        <div class="card">
+        <div class="card listing-card">
             <img 
                 src="<%= listing.image?.url || '/default.jpg' %>"
                 alt="listing-img"
@@ -10,8 +10,8 @@
                 style="height: 20rem"
             />
             <div class="card-body">
-                <p class="card-text">
-                    <%= listing.description || "No description" %> <br>
+                <p class="card-text mt-2">
+                    <b><%= listing.description || "No description" %> </b><br>
                     &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> <br>
                     <%= listing.location || "No location" %> <br>
                     <%= listing.country || "No country" %> <br>
@@ -55,11 +55,15 @@
 </div>
  <div class=" col-8 offset-2 mb-4 reviews">
     <h6>Reviews</h6>
-    <ul>
-        <% for(review of listing.reviews) { %>
-            <li> <%= review.comment %> , <%= review.rating %> &star;</li>
+         <% for(review of listing.reviews) { %>
+            <div class="card col-6 mb-3 ms-3"> 
+                  <div class="card-body">
+                    <h5 class="card-title">Eleven</h5>
+                     <p class="card-text"><%= review.comment %></p>
+                     <p class="card-text"> ratings : <%= review.rating %>&Star;</p>
+                  </div>
+            </div>
         <% } %>
-    </ul>
    
  </div>
     

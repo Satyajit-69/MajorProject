@@ -149,9 +149,17 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 
       console.log("New review saved") ;
       res.redirect(`/listings/${listing.id}`) ;
-
-
   })) ;
+
+
+  //delete
+  app.delete("/listings/:id/reviews/:reviewId" ,wrapAsync (async(req,res) =>{
+    let  {id , reviewId} = req.params  ;
+    await Listing.findByIdAndUpdate(id, {$pull : {reviews:reviewId}}) ;
+    await Reviews.findByIdAndDelete(reviewId) ;
+    console.log("review deleted") ;
+    res.redirect(`/listings/${id}`) ;
+  }));
 
 
 

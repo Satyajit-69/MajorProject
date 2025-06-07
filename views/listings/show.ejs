@@ -53,17 +53,26 @@
            <button class="btn btn-outline-dark">Submit</button>
        </form>
 </div>
- <div class=" col-8 offset-2 mb-4 reviews">
-    <h6>Reviews</h6>
+  <div class="col-8 offset-2 outlines mb-3  reviews">
+    <h6><b>All Reviews</b></h6>
+    <div class="row">
          <% for(review of listing.reviews) { %>
-            <div class="card col-6 mb-3 ms-3"> 
+            <div class="card col-5 ms-3 mb-3 "> 
                   <div class="card-body">
                     <h5 class="card-title">Eleven</h5>
                      <p class="card-text"><%= review.comment %></p>
-                     <p class="card-text"> ratings : <%= review.rating %>&Star;</p>
-                  </div>
+                     <p class="card-text"> ratings : <b><%= review.rating %> </b> &Star;</p>
+                  
+                  <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" 
+                    method="POST">
+                        <button class="btn btn-dark mb-2">Delete</button>
+                 </form>
+                  
+                    </div>
+
+
             </div>
         <% } %>
-   
- </div>
-    
+    </div>
+
+    </div>

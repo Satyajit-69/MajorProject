@@ -3,6 +3,8 @@ body{
  display: flex;
  flex-direction: column;
  min-height: 100vh;
+ 
+ color: rgb(0, 0, 0);
 }
 
 .navbar {
@@ -19,7 +21,6 @@ h2 {
  color: rgb(187, 35, 35);
  font-size: 2rem;
 }
-
 .nav-link{
     color: #222222 !important;
 }

@@ -1,16 +1,14 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing");
 const methodOverride = require("method-override");
 const path = require("path");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync");
-const ExpressError = require("./utils/ExpressError");
-const {listingSchema , reviewsSchema} = require("./schema.js");
 const Reviews = require("./models/review.js") ;
-
-
+const listings = require("./routes/listing.js");
+const wrapAsync = require("./utils/wrapAsync.js");
+const {listingSchema , reviewsSchema} = require("./schema.js");
+const Listing = require("./models/listing.js");
 // Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/wonderlust", {})
   .then(() => console.log("MongoDB connected"))
@@ -31,19 +29,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
-
-//listing validation
-const validateListing = (req,res,next) =>{
-let {error} = listingSchema.validate(req.body);
-    if(error) {
-      let errMsg = error.details[0].message;
-      console.log(errMsg) ;
-      throw new ExpressError(400,errMsg) ;
-      }
-      else {
-      next() ;
-    }
-}
 
 
 //reviews validation
@@ -66,77 +51,9 @@ app.get("/root", (req, res) => {
   res.render("listings/home");
 });
 
-
-
-// Index - All Listings
-app.get("/listings", wrapAsync(async (req, res) => {
-  const listings = await Listing.find({});
-  res.render("listings/index", { allListings: listings });
-}));
-
-
-
-// New Listing Form
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new");
-});
-
-
-
-// Create Listing
-app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
-  if (!req.body.listing.image) req.body.listing.image = { url: "/default.avif" };
-  const newlisting = new Listing(req.body.listing);
-  await newlisting.save();
-  res.redirect("/listings");
-}));
-
-
-
-// Show Listing
-app.get("/listings/:id" ,wrapAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const listing = await Listing.findById(id).populate("reviews");
-  if (!listing) {
-    throw new ExpressError(404, "Listing not found");
-  }
-  res.render("listings/show", { listing });
-}));
-
-
-
-// Edit Form
-app.get("/listings/:id/edit", wrapAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const listing = await Listing.findById(id);
-  if (!listing) {
-    throw new ExpressError(404, "Listing not found");
-  }
-  res.render("listings/edit", { listing });
-}));
-
-
-
-// Update Listing
-app.put("/listings/:id", validateListing, wrapAsync(async (req, res, next) => {
-  const { id } = req.params;
-  let listingData = req.body.listing;
-  if (!listingData.image) listingData.image = { url: "/default.avif" };
-  await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });
-  res.redirect(`/listings/${id}`);
-}));
-
-
-
-// Delete Listing
-app.delete("/listings/:id", wrapAsync(async (req, res) => {
-  const { id } = req.params;
-  await Listing.findByIdAndDelete(id);
-  console.log("Deleted");
-  res.redirect("/listings");
-}));
-
-
+//set common path
+app.use("/listings",listings);
+ 
 //Reviews 
   //post
   app.post("/listings/:id/reviews" ,  validateReview ,wrapAsync ( async (req,res) =>{

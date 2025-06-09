@@ -1,6 +1,9 @@
 const express = require("express");
 const router= express.Router();
 
+//the common path is "/users"
+
+
 //index
 router.get("/",(req,res) =>{
     res.send("hello there ! root ")

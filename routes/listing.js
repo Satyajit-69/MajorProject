@@ -41,6 +41,7 @@ router.post("/", validateListing, wrapAsync(async (req, res, next) => {
   if (!req.body.listing.image) req.body.listing.image = { url: "/default.avif" };
   const newlisting = new Listing(req.body.listing);
   await newlisting.save();
+  req.flash("success","new listing created") ;
   res.redirect("/listings");
 }));
 
@@ -74,8 +75,12 @@ router.get("/:id/edit", wrapAsync(async (req, res, next) => {
 router.put("/:id", validateListing, wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   let listingData = req.body.listing;
-  if (!listingData.image) listingData.image = { url: "/default.avif" };
+  // Fix: Wrap image as object if it's a string
+  if (typeof listingData.image === "string") {
+    listingData.image = { url: listingData.image };
+  }
   await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });
+  req.flash("success","listing updated") ;
   res.redirect(`/listings/${id}`);
 }));
 
@@ -86,6 +91,7 @@ router.delete("/:id", wrapAsync(async (req, res) => {
   const { id } = req.params;
   await Listing.findByIdAndDelete(id);
   console.log("Deleted");
+  req.flash("success","listing deleted") ;
   res.redirect("/listings");
 }));
 

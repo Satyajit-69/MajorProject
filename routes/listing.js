@@ -52,7 +52,8 @@ router.get("/:id" ,wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   const listing = await Listing.findById(id).populate("reviews");
   if (!listing) {
-    throw new ExpressError(404, "Listing not found");
+    req.flash("error", "Listing does not exist");
+    return res.redirect("/listings"); // <-- Add return here!
   }
   res.render("listings/show", { listing });
 }));
@@ -76,7 +77,7 @@ router.put("/:id", validateListing, wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   let listingData = req.body.listing;
   // Fix: Wrap image as object if it's a string
-  if (typeof listingData.image === "string") {
+  if (typeof listingData.image === "string") {  
     listingData.image = { url: listingData.image };
   }
   await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });

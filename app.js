@@ -4,10 +4,15 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const path = require("path");
 const ejsMate = require("ejs-mate");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/reviews.js");
+const listingsRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/reviews.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport") ;
+const localStrategy = require("passport-local") ;
+const User = require("./models/user.js");
+const userRouter = require("./routes/user.js");
+
 
 // Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/wonderlust", {})
@@ -34,29 +39,47 @@ app.set("views", path.join(__dirname, "views"));
 
   app.use(session(sessionOptions)) ;
   app.use(flash());
+ 
+  //passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+  passport.use(new localStrategy(User.authenticate())); //log in and sign up
+
+  passport.serializeUser(User.serializeUser()) ;
+  passport.deserializeUser(User.deserializeUser());
+
   app.use((req,res,next) =>{
-    res.locals.success = req.flash("success") ; 
-    res.locals.error = req.flash("error") ; 
-    next();
-  })
+      res.locals.success = req.flash("success") ; 
+      res.locals.error = req.flash("error") ; 
+      next();
+    })
+
+    app.get("/demouser" , async (req,res) =>{
+      let fakeUser = new User({
+        email:"studentShradha@gmail.com",
+        username : "sigma-student" ,
+      }) ;
+
+      let registerUser =  await User.register(fakeUser,"hello@123") ;
+      res.send(registerUser) ;
+    })
+    
+
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-
-
-
+// Now mount your routes
+app.use("/listings", listingsRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/listings/user",userRouter);
 
 // Home Route
 app.get("/root", (req, res) => {
   res.render("listings/home");
 });
-
-//set common path
-app.use("/listings",listings);
-app.use("/listings/:id/reviews",reviews);
 
 //Page not found - 404
 app.use((req, res) => {

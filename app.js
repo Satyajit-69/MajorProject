@@ -52,19 +52,7 @@ app.set("views", path.join(__dirname, "views"));
       res.locals.success = req.flash("success") ; 
       res.locals.error = req.flash("error") ; 
       next();
-    })
-
-    app.get("/demouser" , async (req,res) =>{
-      let fakeUser = new User({
-        email:"studentShradha@gmail.com",
-        username : "sigma-student" ,
-      }) ;
-
-      let registerUser =  await User.register(fakeUser,"hello@123") ;
-      res.send(registerUser) ;
-    })
-    
-
+    }) ;
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -74,7 +62,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Now mount your routes
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
-app.use("/listings/user",userRouter);
+app.use("/",userRouter);
 
 // Home Route
 app.get("/root", (req, res) => {

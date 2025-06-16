@@ -6,6 +6,15 @@ const {listingSchema} = require("../schema.js");
 const Listing = require("../models/listing.js");
 
 
+//islogged in middleware
+function isLoggedIn(req, res, next) {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "You must be logged in");
+    return res.redirect("/login");
+  }
+  next();
+}
+
 
 //listing validation
 const validateListing = (req,res,next) =>{
@@ -29,8 +38,9 @@ let {error} = listingSchema.validate(req.body);
 
 
 
-// New Listing Form
- router.get("/new", (req, res) => {
+
+//New listings
+router.get("/new",isLoggedIn, (req, res) => {
   res.render("listings/new");
 });
 
@@ -61,7 +71,7 @@ router.get("/:id" ,wrapAsync(async (req, res, next) => {
 
 
 // Edit Form
-router.get("/:id/edit", wrapAsync(async (req, res, next) => {
+router.get("/:id/edit", isLoggedIn ,wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
   if (!listing) {
@@ -73,7 +83,7 @@ router.get("/:id/edit", wrapAsync(async (req, res, next) => {
 
 
 // Update Listing
-router.put("/:id", validateListing, wrapAsync(async (req, res, next) => {
+router.put("/:id", validateListing, isLoggedIn,wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   let listingData = req.body.listing;
   // Fix: Wrap image as object if it's a string
@@ -88,13 +98,15 @@ router.put("/:id", validateListing, wrapAsync(async (req, res, next) => {
 
 
 // Delete Listing
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id",isLoggedIn, wrapAsync(async (req, res) => {
   const { id } = req.params;
   await Listing.findByIdAndDelete(id);
   console.log("Deleted");
   req.flash("success","listing deleted") ;
   res.redirect("/listings");
 }));
+
+
 
 
 module.exports = router ;

@@ -12,7 +12,7 @@ const passport = require("passport") ;
 const localStrategy = require("passport-local") ;
 const User = require("./models/user.js");
 const userRouter = require("./routes/user.js");
-
+const ExpressError = require("./utils/ExpressError.js");
 
 // Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/wonderlust", {})
@@ -51,6 +51,7 @@ app.set("views", path.join(__dirname, "views"));
   app.use((req,res,next) =>{
       res.locals.success = req.flash("success") ; 
       res.locals.error = req.flash("error") ; 
+      res.locals.currUser = req.user ;
       next();
     }) ;
 
@@ -70,8 +71,8 @@ app.get("/root", (req, res) => {
 });
 
 //Page not found - 404
-app.use((req, res) => {
-  res.status(404).render("listings/error.ejs", { message: "Page Not Found" });
+app.all(/.*/, (req, res, next) => {
+  next(new ExpressError(404,"Page Not Found"));
 });
 
 // Global Error Handler

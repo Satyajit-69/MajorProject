@@ -13,12 +13,23 @@
       </div>
          
     </div>
-    <form action="/signup">
-     <button  class=" btn btn-primary">Sign Up</button>
+    <div class="navbar-nav ms-auto">
+    <% if( ! currUser) { %>
+      <form action="/signup">
+     <button  class=" btn ">Sign Up</button>
     </form>
-    &nbsp;
+  
     <form action="/login">
-      <button class="btn  btn-success">Log in</button>
+      <button class="btn  ">Log in</button>
     </form>
+    
+      <% } %>
+       <% if(currUser) { %>
+    <form action="/logout">
+      <button class="btn  ">Log out</button>
+    </form>
+     <% } %>
+    </div>
+   
   </div>
 </nav>

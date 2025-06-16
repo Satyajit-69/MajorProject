@@ -3,9 +3,22 @@ const router = express.Router() ;
 const User = require("../models/user.js");
 const passport = require("passport");
 
+
+
+
+//islogged in middleware
+function isLoggedIn(req, res, next) {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "You must be logged in");
+    return res.redirect("/login");
+  }
+  next();
+}
+
+
 //user - sign up
     router.get("/signup" ,(req,res) =>{
-      res.render("listings/signup.ejs");
+      res.render("listings/user/signup.ejs");
     })
 
 
@@ -20,7 +33,7 @@ const passport = require("passport");
       } catch (error) {
         req.flash("error",error.message) ;
         console.log(error) ;
-        res.redirect("/signup");
+        res.redirect("listings/user/signup");
       }
       
     })
@@ -28,16 +41,34 @@ const passport = require("passport");
   //user - login
 
   router.get("/login",async(req,res) =>{
-     res.render("listings/login.ejs");
+     res.render("listings/user/login.ejs");
   })
+
+
+
 
 
   router.post("/login",
-   passport.authenticate('local', { failureRedirect: '/login' , failureFlash : true }),
+  passport.authenticate('local', 
+    { failureRedirect: '/login' , failureFlash : true 
+    }),
       async(req,res) =>{
-      req.flash("success","Welcome back to Wanderlust !");
-
+      req.flash("success","welcome back to wonderlust ! You are logged in :)");
+      res.redirect("/listings");
   })
 
+
+  //user log out
+ 
+ router.get("/logout", isLoggedIn ,(req,res,next) =>{
+  req.logOut((err) => {
+    if(err) {
+    return next(err);
+  }
+  req.flash("success" ,"You are logged out ! :(");
+  res.redirect("/listings");
+  })
+ 
+})
 
 module.exports = router ;

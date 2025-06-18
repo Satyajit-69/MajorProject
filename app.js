@@ -48,6 +48,7 @@ app.set("views", path.join(__dirname, "views"));
   passport.serializeUser(User.serializeUser()) ;
   passport.deserializeUser(User.deserializeUser());
 
+  //middlewares for locals
   app.use((req,res,next) =>{
       res.locals.success = req.flash("success") ; 
       res.locals.error = req.flash("error") ; 

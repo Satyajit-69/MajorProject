@@ -10,6 +10,10 @@ async function main() {
         console.log("Connected to the database");
 
         await Listing.deleteMany({}); // Clean the data
+        initData.data = initData.data.map((obj) =>({
+            ...obj,
+            owner : "684fb32e4c22b604454e5f49" ,
+        }));
         await Listing.insertMany(initData.data); // Insert new data
         console.log("Data was initialized");
 

@@ -1,33 +1,11 @@
 const express = require("express") ;
 const router = express.Router() ;
 const wrapAsync = require("../utils/wrapAsync.js");
-const ExpressError = require("../utils/ExpressError");
-const {listingSchema} = require("../schema.js");
 const Listing = require("../models/listing.js");
+const {isLoggedIn, isOwner ,validateListing} = require("../middleware.js")
 
 
-//islogged in middleware
-function isLoggedIn(req, res, next) {
-  if (!req.isAuthenticated()) {
-    req.flash("error", "You must be logged in");
-    return res.redirect("/login");
-  }
-  next();
-}
 
-
-//listing validation
-const validateListing = (req,res,next) =>{
-let {error} = listingSchema.validate(req.body);
-    if(error) {
-      let errMsg = error.details[0].message;
-      console.log(errMsg) ;
-      throw new ExpressError(400,errMsg) ;
-      }
-      else {
-      next() ;
-    }
-}
 
 
 // Index - All Listings
@@ -47,9 +25,10 @@ router.get("/new",isLoggedIn, (req, res) => {
 
 
 // Create Listing
-router.post("/", validateListing, wrapAsync(async (req, res, next) => {
+router.post("/", isLoggedIn, validateListing, wrapAsync(async (req, res, next) => {
   if (!req.body.listing.image) req.body.listing.image = { url: "/default.avif" };
   const newlisting = new Listing(req.body.listing);
+  newlisting.owner = req.user._id ;
   await newlisting.save();
   req.flash("success","new listing created") ;
   res.redirect("/listings");
@@ -60,7 +39,7 @@ router.post("/", validateListing, wrapAsync(async (req, res, next) => {
 // Show Listing
 router.get("/:id" ,wrapAsync(async (req, res, next) => {
   const { id } = req.params;
-  const listing = await Listing.findById(id).populate("reviews");
+  const listing = await Listing.findById(id).populate("reviews").populate("owner");
   if (!listing) {
     req.flash("error", "Listing does not exist");
     return res.redirect("/listings"); // <-- Add return here!
@@ -71,7 +50,7 @@ router.get("/:id" ,wrapAsync(async (req, res, next) => {
 
 
 // Edit Form
-router.get("/:id/edit", isLoggedIn ,wrapAsync(async (req, res, next) => {
+router.get("/:id/edit", isLoggedIn ,isOwner,wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
   if (!listing) {
@@ -83,13 +62,18 @@ router.get("/:id/edit", isLoggedIn ,wrapAsync(async (req, res, next) => {
 
 
 // Update Listing
-router.put("/:id", validateListing, isLoggedIn,wrapAsync(async (req, res, next) => {
+router.put("/:id", 
+    isLoggedIn, 
+    isOwner,
+    validateListing,
+    wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   let listingData = req.body.listing;
   // Fix: Wrap image as object if it's a string
   if (typeof listingData.image === "string") {  
     listingData.image = { url: listingData.image };
   }
+  
   await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });
   req.flash("success","listing updated") ;
   res.redirect(`/listings/${id}`);
@@ -98,7 +82,7 @@ router.put("/:id", validateListing, isLoggedIn,wrapAsync(async (req, res, next) 
 
 
 // Delete Listing
-router.delete("/:id",isLoggedIn, wrapAsync(async (req, res) => {
+router.delete("/:id",isLoggedIn,isOwner, wrapAsync(async (req, res) => {
   const { id } = req.params;
   await Listing.findByIdAndDelete(id);
   console.log("Deleted");

@@ -25,18 +25,21 @@
 
 
 <!--Edit and delete section-->
-
+<% if(currUser  && currUser._id.equals(listing.owner._id))  {%>
 <div class="btns mb-2">
     <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-2 add-btn">Edit</a>
     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
         <button class="btn btn-dark offset-4">Delete</button>
     </form>
 </div>
-
+<% } %>
 
 <br>  
+
+
+
+<% if(currUser) {%>
 <div class="col-8 offset-2 outlines mb-3  reviews">
- 
     <h4> Leave -  a  - Review </h4>
        <form action="/listings/<%= listing.id %>/reviews" 
         class="mb-3 needs-validation" method="POST"
@@ -60,7 +63,7 @@
            <button class="btn btn-outline-dark">Submit</button>
        </form>
 </div>
-
+<% } %>
 
 <!--Review section-->
   <div class="col-8 offset-2 outlines mb-3  review-card">
@@ -70,7 +73,7 @@
             <div class="review-card col-5 ms-3 mt-1 mb-3 "> 
                   <div class="card-body">
                     
-                    <h5 class="card-title mt-2">Eleven</h5>
+                    <h5 class="card-title mt-2"><%= review.author.username %></h5>
                      <p class="card-text"><%= review.comment %></p>
                      <p class="card-text"> ratings : <b><%= review.rating %> </b> &Star;</p>
                   

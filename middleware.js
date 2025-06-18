@@ -2,7 +2,7 @@ const Listing = require("./models/listing");
 const ExpressError = require("./utils/ExpressError");
 const {listingSchema} = require("./schema.js");
 const {reviewsSchema} = require("./schema.js");
-
+const Review = require("./models/review");
 
 
 
@@ -56,3 +56,22 @@ let {error} = reviewsSchema.validate(req.body);
       next() ;
     }
 }
+
+
+module.exports.isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params; // ✅ use correct key
+  const review = await Review.findById(reviewId);
+
+  if (!review) {
+    req.flash("error", "Review not found!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  if (!review.author.equals(res.locals.currUser._id)) {
+    req.flash("error", "Actions are only valid for the author of the review!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  next();
+};
+

@@ -48,7 +48,7 @@ h2 {
 
 
 .f-info-socials i{
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-right: 1.1rem;
 
 }
@@ -260,4 +260,11 @@ h2 {
   display: flex;
   justify-content: center;
   margin-bottom: 16px;
+}
+footer {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  height: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
 }

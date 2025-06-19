@@ -8,7 +8,7 @@ const Review = require("./models/review");
 
 module.exports.isLoggedIn = (req, res, next) =>{
   if (!req.isAuthenticated()) {
-    req.session.redirectUrl = res.originalUrl ;
+    req.session.redirectUrl = req.originalUrl ;
     req.flash("error", "You must be logged in");
     return res.redirect("/login");
   }
@@ -59,7 +59,7 @@ let {error} = reviewsSchema.validate(req.body);
 
 
 module.exports.isReviewAuthor = async (req, res, next) => {
-  const { id, reviewId } = req.params; // ✅ use correct key
+  const { id, reviewId } = req.params; 
   const review = await Review.findById(reviewId);
 
   if (!review) {

@@ -53,6 +53,7 @@ app.set("views", path.join(__dirname, "views"));
       res.locals.success = req.flash("success") ; 
       res.locals.error = req.flash("error") ; 
       res.locals.currUser = req.user ;
+      res.locals.redirectUrl ;
       next();
     }) ;
 
@@ -74,7 +75,7 @@ app.get("/root", (req, res) => {
 //Page not found - 404
 app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404,"Page Not Found"));
-});
+});;
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -88,3 +89,4 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log("Listening on port 3000");
 });
+

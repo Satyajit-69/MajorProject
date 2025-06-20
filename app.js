@@ -53,7 +53,7 @@ app.set("views", path.join(__dirname, "views"));
       res.locals.success = req.flash("success") ; 
       res.locals.error = req.flash("error") ; 
       res.locals.currUser = req.user ;
-      res.locals.redirectUrl ;
+    
       next();
     }) ;
 

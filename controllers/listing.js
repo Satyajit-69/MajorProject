@@ -1,5 +1,7 @@
 const Listing = require("../models/listing.js");
 
+
+
 //index route
 module.exports.index = async (req, res) => {
   const listings = await Listing.find({});
@@ -15,9 +17,14 @@ module.exports.new = (req, res) => {
 
 //create listing
 module.exports.createListing = async (req, res, next) => {
+  let url = req.file.path ;
+  let filename =req.file.filename ;
+
+  
   if (!req.body.listing.image) req.body.listing.image = { url: "/default.avif" };
   const newlisting = new Listing(req.body.listing);
   newlisting.owner = req.user._id ;
+  newlisting.image = {filename,url};
   await newlisting.save();
   req.flash("success","new listing created") ;
   res.redirect("/listings");
@@ -75,10 +82,11 @@ module.exports.updateRoute  = async (req, res, next) => {
 //deleteRoute 
 module.exports.deleteRoute =async (req, res, next) => {
   const { id } = req.params;
-  const listing = await Listing.findById(id);
+  const listing = await Listing.findByIdAndDelete(id);
+  req.flash("success" ,"listing deleted !") ;
   if (!listing) {
     throw new ExpressError(404, "Listing not found");
   }
-  res.render("listings/edit", { listing });
+  res.redirect("/listings");
 };
 

@@ -22,13 +22,12 @@
     </div>
   </div>
 </div>
-
-<!-- Edit and Delete Buttons for Owner -->
-<% if (currUser && currUser._id.equals(listing.owner._id)) { %>
+<% if (currUser && String(currUser._id) === String(listing.owner._id)) { %>
   <div class="btns mb-2">
     <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-2 add-btn">Edit</a>
-    <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
-      <button class="btn btn-dark offset-4">Delete</button>
+    <br>
+    <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" style="display:inline;">
+      <button type="submit" class="btn btn-dark offset-4">Delete</button>
     </form>
   </div>
 <% } %>

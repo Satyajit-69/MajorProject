@@ -25,6 +25,10 @@ module.exports.createListing = async (req, res, next) => {
   const newlisting = new Listing(req.body.listing);
   newlisting.owner = req.user._id ;
   newlisting.image = {filename,url};
+  newlisting.geometry = {
+  type: "Point",
+  coordinates: [85.8414, 20.4625] // Bhubaneswar (lng, lat)
+  };
   await newlisting.save();
   req.flash("success","new listing created") ;
   res.redirect("/listings");
@@ -60,6 +64,8 @@ module.exports.editRoute = async (req, res, next) => {
   if (!listing) {
     throw new ExpressError(404, "Listing not found");
   }
+  let originalImage = listing.image.url ;
+  originalImage.replace("/upload" , "/upload/h_300,w_250")
   res.render("listings/edit", { listing });
 };
 
@@ -67,13 +73,15 @@ module.exports.editRoute = async (req, res, next) => {
 //update route
 module.exports.updateRoute  = async (req, res, next) => {
   const { id } = req.params;
-  let listingData = req.body.listing;
-  // Fix: Wrap image as object if it's a string
-  if (typeof listingData.image === "string") {  
-    listingData.image = { url: listingData.image };
+  let listing =  await Listing.findByIdAndUpdate( id ,{...req.body.listing }) ;
+
+  if(typeof req.file !== "undefined") {
+    let url = req.file.path ;
+    let filename = req.file.filename ;
+    listing.image = { filename, url };
+    await listing.save();
   }
-  
-  await Listing.findByIdAndUpdate(id, listingData, { runValidators: true });
+
   req.flash("success","listing updated") ;
   res.redirect(`/listings/${id}`);
 };

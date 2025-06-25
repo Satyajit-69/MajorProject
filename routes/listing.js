@@ -31,13 +31,18 @@ router.get("/:id", wrapAsync(listingControllers.showListing));3
 
 
 // Edit Form
-router.get("/:id/edit", isLoggedIn ,isOwner,wrapAsync(listingControllers.editRoute));
+router.get("/:id/edit", 
+  isLoggedIn ,
+  isOwner,
+  wrapAsync(listingControllers.editRoute));
 
 // Update Listing
 router.put("/:id", 
     isLoggedIn, 
-    isOwner,
+    isOwner,  
+    upload.single('listing[image]'),
     validateListing,
+
     wrapAsync(listingControllers.updateRoute));
 
 

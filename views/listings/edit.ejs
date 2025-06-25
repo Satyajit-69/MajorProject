@@ -4,7 +4,11 @@
   <div class=" container  col-8 mt-3 ">
 
     <h1 class="mb-4 text-center">Edit the Listing</h1>
-    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST">
+    <form action="/listings/<%= listing._id %>?_method=PUT" 
+      method="POST"
+      novalidate
+      class="needs-validation"
+      enctype="multipart/form-data">
       
  
 
@@ -28,17 +32,28 @@
             </textarea>
        </div>
     
-      
-
-    <div class="mb-3">
-       <label for="image" class="form-label">Image</label>
-       <input name="listing[image]"
-        value="<%= listing.image.url %>"
-        type="text"
-        class="form-control"> 
-    </div>
-      
+         
+   <div class="mb-3">
+        <label for="preview-image" class="form-label">Preview Image</label>
+        <br>
+         <img 
+               src="<%= listing.image?.url || '/default.jpg' %>"
+                class="card-img-top" 
+                alt="listing image"  
+                style="width: 300px;" 
+                />
+                 
+       </div>
     
+       
+   <div class="mb-3">
+            <label for="image" class="form-label">Upload Image</label>
+            <input name="listing[image]" 
+             type="file" 
+             class="form-control" 
+             placeholder="Choose image" 
+             >
+      </div>
 
       
         

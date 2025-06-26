@@ -1,35 +1,56 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/root"><i class="fa-solid fa-compass"></i></a>
+    <!-- Left: Logo + Explore -->
+    <a class="navbar-brand" href="/root">
+      <i class="fa-solid fa-compass"></i>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/root">Home</a>
-        <a class="nav-link" href="/listings">All listings</a>
-        <a class="nav-link" href="/listings/new">Add new listing</a>
-           
+      <div class="navbar-nav me-auto">
+        <a class="nav-link" href="/listings">Explore</a>
       </div>
-         
+
+      <!-- Center: Search Bar -->
+      <div class="mx-auto d-none d-md-flex align-items-center search-bar-custom">
+        <div class="search-section">
+          <h6 class="mb-0">Where</h6>
+          <small class="text-muted">Search destinations</small>
+        </div>
+        <div class="search-section">
+          <h6 class="mb-0">Check in</h6>
+          <small class="text-muted">Add dates</small>
+        </div>
+        <div class="search-section">
+          <h6 class="mb-0">Check out</h6>
+          <small class="text-muted">Add dates</small>
+        </div>
+        <div class="search-section">
+          <h6 class="mb-0">Who</h6>
+          <small class="text-muted">Add guests</small>
+        </div>
+        <button class="search-btn"><i class="fa fa-search text-white"></i></button>
+      </div>
+
+      <!-- Right: Auth + Host -->
+      <div class="navbar-nav ms-auto host">
+        <a class="nav-link" href="/listings/new">Become a host</a>
+        <% if (!currUser) { %>
+          <form action="/signup" class="d-inline">
+            <button class="btn btn-outline-secondary">Sign Up</button>
+          </form>
+          &nbsp;
+          <form action="/login" class="d-inline">
+            <button class="btn btn-outline-secondary">Log in</button>
+          </form>
+        <% } else { %>
+          <form action="/logout" class="d-inline">
+            <button class="btn btn-outline-secondary">Log out</button>
+          </form>
+        <% } %>
+      </div>
     </div>
-    <div class="navbar-nav ms-auto">
-    <% if( ! currUser) { %>
-      <form action="/signup">
-     <button  class=" btn ">Sign Up</button>
-    </form>
-  
-    <form action="/login">
-      <button class="btn  ">Log in</button>
-    </form>
-    
-      <% } %>
-       <% if(currUser) { %>
-    <form action="/logout">
-      <button class="btn  ">Log out</button>
-    </form>
-     <% } %>
-    </div>
-   
   </div>
 </nav>

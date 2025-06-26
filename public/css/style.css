@@ -56,13 +56,13 @@ h2 {
 
 
 .f-info{
-    height: 8rem;
+    margin-top: 3px;
+    height: 6rem;
     background-color: rgba(178, 143, 143, 0.418);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     text-align: center;
-    align-items: space-evenly;
     color: rgb(0, 0, 0);
 }
 
@@ -255,4 +255,129 @@ footer {
   height: 1rem;
   font-size: 0.9rem;
   text-align: center;
+}
+
+
+.search-bar-custom {
+  background-color: white;
+  border-radius: 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 8px 12px;
+  font-size: 10px;
+  gap: 12px;
+}
+
+.search-section {
+  padding: 0 10px;
+  border-right: 1px solid #000000;
+}
+
+.search-section:last-child {
+  border-right: none;
+}
+
+.search-btn {
+  background-color: #ff385c;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+ .mainbar  div:hover {
+     background: grey;
+}
+
+.host a {
+  padding: 10px;
+  font-size: small;
+}
+
+
+.host button {
+  padding: 10px;
+  font-size: smaller;
+  margin: auto;
+  
+}
+
+.f-customer {
+  height: 300px;
+  width: 100%;
+  color: #000000;
+  background: gray;
+  display: flex;
+  flex-wrap: wrap;
+}
+.support {
+  background-color: rgb(255, 255, 255);
+  width: 33.3%;
+  color: white;
+  border-right: 1px solid wheat;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 1rem;
+}
+
+.hosting {
+  background-color: rgb(255, 255, 255);
+  width: 33.3%;
+  color: white;
+  border-right: 1px solid wheat;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 1rem;
+}
+
+
+.airbnb {
+   background-color: rgb(255, 255, 255);
+  width: 33.3%;
+  color: white;
+  border-right: 1px solid wheat;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 1rem; 
+}
+
+.heading {
+  font-size: large;
+  color: black;
+  font-weight: bold;
+}
+
+.support a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-size: small;
+}
+
+
+.hosting a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-size: small;
+}
+
+.f-customer a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+
+.airbnb a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-size: small;
 }

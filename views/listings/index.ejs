@@ -1,10 +1,73 @@
 <% layout('/layouts/boilerplate') %>
 <body>
- <div class="row">
-   
+    <style>
+        #filter{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter{
+            text-align: center;
+            margin-right: 1.5rem;
+            margin-top: 2rem;
+            opacity: 0.4;
+            font-size: small;
+        }
+        .filter p  {
+            font-size: 0.7rem;
+        }
+        .filter:hover {
+            opacity: 1;
+            cursor:pointer;
+        }
+        .filter p:hover{
+            text-decoration: underline;
+        }
+
+        .tax-info {
+            display: none;
+            font-size: xx-small;
+        }
+
+        .tax-toggle {
+            border: 1px solid black ;
+            border-radius: 1rem;
+            height: 3.5rem;
+            padding: 1rem;
+            font-size: small;  
+            align-items: center;
+        }
+
+        
+    </style>
+
+ <div id="filter">
+
+
+ <div class="filter"><i class="fa-solid fa-fire"></i> <p>trending</p></div>
+ <div class="filter"><i class="fa-solid fa-person-hiking"></i><p>hiking</p></div>
+ <div class="filter"><i class="fa-solid fa-cow"></i><p>farmhouse</p></div>
+ <div class="filter"><i class="fa-solid fa-snowflake"></i><p>snow sites</p></div>
+ <div class="filter"><i class="fa-solid fa-person-swimming"></i><p>pools</p></div>
+ <div class="filter"><i class="fa-solid fa-bed"></i><p>bedrooms</p></div>
+ <div class="filter"><i class="fa-solid fa-mountain-city"></i><p>iconic cities</p></div>
+ <div class="filter"><i class="fa-solid fa-campground"></i><p>camping</p></div>
+ <div class="filter"><i class="fa-solid fa-volcano"></i><p>volcanos</p></div>
+<div class="filter"><i class="fa-solid fa-mountain-city"></i><p>iconic cities</p></div>
+ <div class="filter"><i class="fa-solid fa-campground"></i><p>camping</p></div>
+
+<div class="tax-toggle">
+    
+<div class=" form-switch form-check-reverse ">
+  <input class="form-check-input" type="checkbox" id="switchCheckReverse">
+  <label class="form-check-label" for="switchCheckReverse">Display after taxes</label>
+</div>
+</div>
+
+
  </div>
 
- <div class="row row-cols-lg-5 row-cols-md-2 row-cols-sm-1 height:10px mt-3"> 
+ <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 height:10px mt-3"> 
 
     <% for (let listing of allListings) { %>
     
@@ -22,6 +85,7 @@
                 <p class="card-text">
                     <b><%= listing.title %></b>  <br> 
                     &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night 
+                    &nbsp; &nbsp; <i class="tax-info">+ 18% GST</i>
                 </p>
             </div>
         </div>
@@ -30,3 +94,13 @@
     <% } %>
 </div>
 </body>
+
+<script>
+    const taxSwitch = document.getElementById("switchCheckReverse");
+    taxSwitch.addEventListener("change", () => {
+        const taxInfo = document.getElementsByClassName("tax-info");
+        for (let info of taxInfo) {
+            info.style.display = taxSwitch.checked ? "inline" : "none";
+        }
+    });
+</script>

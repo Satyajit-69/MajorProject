@@ -30,15 +30,22 @@
         }
 
         .tax-toggle {
-            border: 1px solid black ;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            margin-left: 1rem;
             border-radius: 1rem;
-            height: 3.5rem;
-            padding: 1rem;
-            font-size: small;  
+            
+            padding: 10px;
+            font-size: smaller;  
             align-items: center;
         }
-
         
+        #dropdownMenuButton{
+            font-size: x-small;
+        }
+        
+        .dropdown-item {
+            font-size: xx-small;
+        }
     </style>
 
  <div id="filter">
@@ -53,20 +60,32 @@
  <div class="filter"><i class="fa-solid fa-mountain-city"></i><p>iconic cities</p></div>
  <div class="filter"><i class="fa-solid fa-campground"></i><p>camping</p></div>
  <div class="filter"><i class="fa-solid fa-volcano"></i><p>volcanos</p></div>
-<div class="filter"><i class="fa-solid fa-mountain-city"></i><p>iconic cities</p></div>
- <div class="filter"><i class="fa-solid fa-campground"></i><p>camping</p></div>
-
-<div class="tax-toggle">
-    
-<div class=" form-switch form-check-reverse ">
-  <input class="form-check-input" type="checkbox" id="switchCheckReverse">
-  <label class="form-check-label" for="switchCheckReverse">Display after taxes</label>
-</div>
-</div>
-
-
+<div class="filter"><i class="fa-regular fa-hospital"></i><p>hospitals</p></div>
+ <div class="filter"><i class="fa-solid fa-tree"></i><p>forests</p></div>
+  <div class="filter"><i class="fa-solid fa-ship"></i><p>boating</p></div>
+    <div class="tax-toggle">   
+    <div class=" form-switch form-check-reverse ">
+            <input class="form-check-input" type="checkbox" id="switchCheckReverse">
+            <label class="form-check-label" for="switchCheckReverse">Display after taxes</label>
+    </div>
+    </div>   
  </div>
 
+ <div class="dropdown">
+  <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" 
+          data-bs-toggle="dropdown" aria-expanded="false">
+    filters
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
+</div>
+
+
+
+<!--Listing section-->
  <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 height:10px mt-3"> 
 
     <% for (let listing of allListings) { %>

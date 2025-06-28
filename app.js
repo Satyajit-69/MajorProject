@@ -93,6 +93,10 @@ app.get("/", (req, res) => {
   res.render("listings/home");
 });
 
+app.get("/root",(req,res) => {
+  res.render("listings/home");
+})
+
 //Page not found - 404
 app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404,"Page Not Found"));

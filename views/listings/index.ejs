@@ -1,6 +1,42 @@
 <% layout('/layouts/boilerplate') %>
 <body>
     <style>
+  /* Already existing styles above... */
+
+  @media (max-width: 768px) {
+    #filter {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 1rem 0.5rem;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    #filter::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+
+    .filter {
+      flex: 0 0 auto;
+      margin-right: 1rem;
+      font-size: 0.65rem;
+    }
+
+    .row.row-cols-lg-4 {
+      grid-template-columns: repeat(1, 1fr) !important;
+    }
+
+    .listing-card img {
+      height: 14rem !important;
+    }
+
+    .card-body p {
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+    <style>
         #filter{
             display: flex;
             flex-wrap: wrap;

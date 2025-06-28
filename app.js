@@ -89,7 +89,7 @@ app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/",userRouter);
 
 // Home Route
-app.get("/root", (req, res) => {
+app.get("/", (req, res) => {
   res.render("listings/home");
 });
 

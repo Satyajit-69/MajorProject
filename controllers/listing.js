@@ -17,20 +17,18 @@ module.exports.new = (req, res) => {
 
 //create listing
 module.exports.createListing = async (req, res, next) => {
-  let url = req.file.path ;
-  let filename =req.file.filename ;
+  let url = req.file ? req.file.path : "/default.avif";
+  let filename = req.file ? req.file.filename : "default";
 
-  
-  if (!req.body.listing.image) req.body.listing.image = { url: "/default.avif" };
   const newlisting = new Listing(req.body.listing);
-  newlisting.owner = req.user._id ;
-  newlisting.image = {filename,url};
+  newlisting.owner = req.user._id;
+  newlisting.image = { filename, url };
   newlisting.geometry = {
-  type: "Point",
-  coordinates: [85.8414, 20.4625] // Bhubaneswar (lng, lat)
+    type: "Point",
+    coordinates: [85.8414, 20.4625]
   };
   await newlisting.save();
-  req.flash("success","new listing created") ;
+  req.flash("success", "new listing created");
   res.redirect("/listings");
 };
 
@@ -50,7 +48,7 @@ module.exports.showListing = async (req, res, next) => {
 
   if (!listing) {
     req.flash("error", "Listing does not exist");
-    return res.redirect("/listings"); // ✅ prevent further execution
+    return res.redirect("/listings"); 
   }
 
   res.render("listings/show", { listing });

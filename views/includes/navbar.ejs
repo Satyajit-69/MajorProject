@@ -1,14 +1,17 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
     <!-- Left: Logo + Explore -->
-   
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
- <a class="navbar-brand" href="/root">
+    <a class="navbar-brand" href="/root">
       <i class="fa-solid fa-compass"></i>
     </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="/listings">Explore</a>
+        <a class="nav-link" href="/listings" style="font-size: small;">Explore</a>
       </div>
 
       <!-- Center: Search Bar -->
@@ -33,24 +36,20 @@
       </div>
 
       <!-- Right: Auth + Host -->
-      <div class="navbar-nav ms-auto host">
-        <style>
-          .nav-link i {
-            margin-left: 5px;
-          }
-        </style>
-        <a class="nav-link" href="/listings/new">Become a host<i class="fa-solid fa-globe"></i></a>
+      <div class="navbar-nav ms-auto align-items-center">
+        <a class="nav-link" href="/listings/new" style="font-size: small;">Become a host</a>
+        <a class="nav-link" href="/language"><i class="fa-solid fa-globe"></i></a>
         <% if (!currUser) { %>
           <form action="/signup" class="d-inline">
-            <button class="btn btn-outline-secondary">Sign Up</button>
+            <button class="btn btn-outline-secondary btn-sm">Sign Up</button>
           </form>
           &nbsp;
           <form action="/login" class="d-inline">
-            <button class="btn btn-outline-secondary">Log in</button>
+            <button class="btn btn-outline-secondary btn-sm">Log in</button>
           </form>
         <% } else { %>
           <form action="/logout" class="d-inline">
-            <button class="btn btn-outline-secondary">Log out</button>
+            <button class="btn btn-outline-secondary btn-sm">Log out</button>
           </form>
         <% } %>
       </div>

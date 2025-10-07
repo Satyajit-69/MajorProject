@@ -1,17 +1,25 @@
-const mongoose = require("mongoose") ;
-const Schema = mongoose.Schema ;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const passportlocalMongoose = require("passport-local-mongoose");
-const User = new Schema({});
 
-//schema define
+// DELETE the empty 'const User = new Schema({});' line.
 
 const userSchema = new Schema ({
-    email :{
-        type : String ,
-        required : true ,
-    }
-})
+ // Passport-local-mongoose requires this field for the default strategy
+ // to work correctly. It uses this field to check for uniqueness.
+ username: { 
+ type: String, 
+ required: true, 
+ unique: true 
+ },
+ email :{
+ type : String ,
+ required : true ,
+ unique: true
+ }
+});
 
-//by default username , password , salting , hashing  (all works will be done)
- userSchema.plugin(passportlocalMongoose);
- module.exports = mongoose.model('User', userSchema);
+// The plugin adds methods for hashing/salting/checking the password.
+userSchema.plugin(passportlocalMongoose);
+
+module.exports = mongoose.model('User', userSchema);

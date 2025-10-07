@@ -94,8 +94,14 @@ app.get("/root", (req, res) => {
   res.render("listings/home");
 });
 
+app.use((req, res, next) => {
+  res.locals.currUser = req.user;  // or req.session.user if you're using sessions
+  next();
+});
+
+
 // ------------------- 404 Handler -------------------
-app.all("*", (req, res, next) => {
+app.all("/*/", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
@@ -108,7 +114,7 @@ app.use((err, req, res, next) => {
 });
 
 // ------------------- Start Server -------------------
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

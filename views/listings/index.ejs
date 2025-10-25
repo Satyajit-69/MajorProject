@@ -129,10 +129,11 @@
     <a href="/listings/<%= listing._id %>" class="listing-link">
         <div class="card col listing-card">
             <img 
-               src="<%= listing.image?.url || '/default.jpg' %>"
+               src="<%= listing.image?.url || '/default.avif' %>"
                 class="card-img-top" 
                 alt="listing image"  
-                style="height: 20rem" />
+                style="height: 20rem; object-fit: cover;"
+                onerror="this.onerror=null; this.src='/default.avif';" />
                  
             <div class="card-img-overlay">Get info</div>
 

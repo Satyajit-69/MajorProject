@@ -36,16 +36,33 @@ module.exports.isOwner = async (req,res,next) =>{
     next() ;
 }
 
-module.exports.validateListing = (req,res,next) =>{
-let {error} = listingSchema.validate(req.body);
-    if(error) {
-      let errMsg = error.details[0].message;
-      console.log(errMsg) ;
-      throw new ExpressError(400,errMsg) ;
-      }
-      else {
-      next() ;
+module.exports.validateListing = (req, res, next) => {
+  try {
+    if (!req.body.listing) {
+      throw new ExpressError(400, "Missing listing data");
     }
+
+    const { error } = listingSchema.validate({ listing: req.body.listing });
+    if (error) {
+      const errMsg = error.details.map(el => el.message).join(', ');
+      console.log("Validation error:", errMsg);
+      req.flash("error", errMsg);
+      if (req.method === "PUT") {
+        return res.redirect(`/listings/${req.params.id}/edit`);
+      } else {
+        return res.redirect("/listings/new");
+      }
+    }
+    next();
+  } catch (err) {
+    if (req.method === "PUT") {
+      req.flash("error", err.message);
+      return res.redirect(`/listings/${req.params.id}/edit`);
+    } else {
+      req.flash("error", err.message);
+      return res.redirect("/listings/new");
+    }
+  }
 }
 
 module.exports.validateReview = (req,res,next) =>{

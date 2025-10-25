@@ -4,10 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingControllers = require("../controllers/listing.js");
-const multer = require('multer');
-
-const { storage } = require("../cloudConfig.js");
-const upload = multer({ storage });
+const { uploadMiddleware, handleMulterError } = require("../utils/imageUpload.js");
 
 // Index - All Listings
 router.get("/", wrapAsync(listingControllers.index));
@@ -16,11 +13,10 @@ router.get("/", wrapAsync(listingControllers.index));
 router.get("/new", isLoggedIn, listingControllers.new);
 
 // Create Listing
-// ✅ FIXED: upload.single PEHELE, validateListing PARE
 router.post("/", 
-  isLoggedIn, 
-  upload.single('listing[image]'),  // ← First: File upload
-  validateListing,                   // ← Then: Validation
+  isLoggedIn,
+  uploadMiddleware.single('image'),  // Handle file upload
+  validateListing,                   // Validate the listing data
   wrapAsync(listingControllers.createListing)
 );
 
@@ -35,12 +31,11 @@ router.get("/:id/edit",
 );
 
 // Update Listing
-// ✅ FIXED: upload.single PEHELE, validateListing PARE
 router.put("/:id", 
   isLoggedIn, 
-  isOwner,  
-  upload.single('listing[image]'),  // ← First: File upload
-  validateListing,                   // ← Then: Validation
+  isOwner,
+  uploadMiddleware.single('image'),  // Handle file upload
+  validateListing,                   // Validate the listing data      
   wrapAsync(listingControllers.updateRoute)
 );
 

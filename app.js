@@ -23,9 +23,22 @@ const ExpressError = require("./utils/ExpressError.js");
 const dbUrl = process.env.ATLASDB_URL;
 
 mongoose
-  .connect(dbUrl, {})
+  .connect(dbUrl, {
+    serverSelectionTimeoutMS: 5000,
+    heartbeatFrequencyMS: 2000
+  })
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.log("MongoDB connection error:", err));
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+    if (err.message.includes("IP whitelist")) {
+      console.log("\n👉 Please add your IP address to MongoDB Atlas whitelist:");
+      console.log("1. Go to MongoDB Atlas dashboard");
+      console.log("2. Click on Network Access");
+      console.log("3. Click Add IP Address");
+      console.log("4. Click Allow Access from Anywhere (or add your specific IP)\n");
+    }
+    process.exit(1);
+  });
 
 // ------------------- View Engine -------------------
 app.engine("ejs", ejsMate);
@@ -81,11 +94,7 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // ------------------- Routes -------------------
-app.use("/listings", listingsRouter);
-app.use("/listings/:id/reviews", reviewsRouter);
-app.use("/", userRouter);
-
-// Home Route
+// Home Route (should be before other routes)
 app.get("/", (req, res) => {
   res.render("listings/home");
 });
@@ -94,23 +103,57 @@ app.get("/root", (req, res) => {
   res.render("listings/home");
 });
 
-app.use((req, res, next) => {
-  res.locals.currUser = req.user;  // or req.session.user if you're using sessions
-  next();
-});
+// Mount routes in order from most specific to least specific
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/listings", listingsRouter);
+app.use("/", userRouter);
 
 
 // ------------------- 404 Handler -------------------
-app.all("/*/", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found"));
+app.all("*", (req, res, next) => {
+  if (req.path.includes('favicon.ico')) {
+    return res.status(404).end();
+  }
+  next(new ExpressError(404, `Page Not Found - ${req.originalUrl}`));
 });
 
 // ------------------- Global Error Handler -------------------
 app.use((err, req, res, next) => {
+  if (err.status === 404 && req.path.includes('favicon.ico')) {
+    return res.status(404).end(); // Silently handle favicon 404s
+  }
+  
   console.error("Error:", err);
+  
+  // Handle Multer errors
+  if (err.name === 'MulterError') {
+    err.status = 400;
+    err.message = `Image upload error: ${err.message}`;
+  }
+  
+  // Handle Cloudinary errors
+  if (err.http_code) {
+    err.status = err.http_code;
+    err.message = `Cloudinary error: ${err.message}`;
+  }
+  
   const status = err.status || 500;
   const message = err.message || "Something went wrong!";
-  res.status(status).render("listings/error.ejs", { message });
+  
+  // Check if the request accepts HTML
+  if (req.accepts('html')) {
+    res.status(status).render("listings/error.ejs", { 
+      message,
+      status,
+      error: process.env.NODE_ENV !== 'production' ? err : {}
+    });
+  } else {
+    // For API requests, return JSON
+    res.status(status).json({
+      error: message,
+      status
+    });
+  }
 });
 
 // ------------------- Start Server -------------------

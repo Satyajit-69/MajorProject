@@ -6,41 +6,46 @@
     <h1 class="mb-4 text-center">Edit the Listing</h1>
     <form action="/listings/<%= listing._id %>?_method=PUT" 
       method="POST"
-      novalidate
       class="needs-validation"
+      novalidate
       enctype="multipart/form-data">
-      
- 
 
- <div class="mb-3">
+    <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input 
-         name="listing[title]" 
-         value="<%= listing.title %>"
-         type="text"
-         class="form-control"/> 
-         <div class="valid-feedback">
-          Title looks good :
-         </div>
-       </div>
+            name="listing[title]" 
+            id="title"
+            value="<%= listing.title %>"
+            type="text"
+            class="form-control"
+            required
+        /> 
+        <div class="valid-feedback">Title looks good!</div>
+        <div class="invalid-feedback">Please provide a title.</div>
+    </div>
     
-
-        
-   <div class="mb-3">
+    <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-            <textarea name="listing[description]" class="form-control"><%=listing.description  %>
-            </textarea>
-       </div>
+        <textarea 
+            name="listing[description]" 
+            id="description"
+            class="form-control"
+            required
+        ><%= listing.description.trim() %></textarea>
+        <div class="valid-feedback">Description looks good!</div>
+        <div class="invalid-feedback">Please provide a description.</div>
+    </div>
     
          
    <div class="mb-3">
         <label for="preview-image" class="form-label">Preview Image</label>
         <br>
          <img 
-               src="<%= listing.image?.url || '/default.jpg' %>"
+               src="<%= listing.image?.url || '/default.avif' %>"
                 class="card-img-top" 
                 alt="listing image"  
-                style="width: 300px;" 
+                style="width: 300px; height: 200px; object-fit: cover;" 
+                onerror="this.onerror=null; this.src='/default.avif';"
                 />
                  
        </div>
@@ -48,43 +53,61 @@
        
    <div class="mb-3">
             <label for="image" class="form-label">Upload Image</label>
-            <input name="listing[image]" 
-             type="file" 
-             class="form-control" 
-             placeholder="Choose image" 
-             >
+            <input 
+              name="image" 
+              id="image"
+              type="file" 
+              class="form-control"
+              accept="image/*">
+            <div class="form-text">Upload a new image (JPG, PNG, AVIF - Max 5MB)</div>
       </div>
 
       
         
        <div class="row"> 
-
         <div class="mb-3 col-md-4">
-         <label for="price" class="form-label">Price</label>
-         <input name="listing[price]"
-          value="<%= listing.price %>"
-          type="number"
-          class="form-control">
-
-          <div class="invalid-feedback">
-           Looks good!
-          </div>
-
-       </div>
+            <label for="price" class="form-label">Price</label>
+            <input 
+                name="listing[price]"
+                id="price"
+                value="<%= listing.price %>"
+                type="number"
+                class="form-control"
+                min="0"
+                required
+            >
+            <div class="valid-feedback">Price looks good!</div>
+            <div class="invalid-feedback">Please provide a valid price.</div>
+        </div>
     
-
-      
         <div class="mb-3 col-md-8">
             <label for="country" class="form-label">Country</label>
-            <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control">
-       </div>      
-        
-       </div>  
+            <input 
+                name="listing[country]"
+                id="country"
+                value="<%= listing.country %>"
+                type="text"
+                class="form-control"
+                required
+            >
+            <div class="valid-feedback">Country looks good!</div>
+            <div class="invalid-feedback">Please provide a country.</div>
+        </div>      
+    </div>  
          
-       <div class="mb-3 ">
-            <label for="location" class="form-label">Location</label>
-              <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control">
-       </div>
+    <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input 
+            name="listing[location]"
+            id="location"
+            value="<%= listing.location %>"
+            type="text"
+            class="form-control"
+            required
+        >
+        <div class="valid-feedback">Location looks good!</div>
+        <div class="invalid-feedback">Please provide a location.</div>
+    </div>
         
 
        <br>

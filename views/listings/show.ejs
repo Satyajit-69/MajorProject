@@ -14,10 +14,11 @@
     <h2><%= listing.title || "No Title" %></h2>
     <div class="card listing-card">
       <img 
-        src="<%= listing.image?.url || '/default.jpg' %>" 
+        src="<%= listing.image?.url || '/default.avif' %>" 
         alt="listing-img" 
         class="card-img-top show-img" 
-        style="height: 20rem"
+        style="height: 20rem; object-fit: cover;"
+        onerror="this.onerror=null; this.src='/default.avif';"
       />
       <div class="card-body">
         <p class="card-text mt-2">

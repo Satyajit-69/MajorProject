@@ -37,12 +37,15 @@
         <div class="mb-3">
             <label for="image" class="form-label">Upload Image</label>
             <input 
-                name="listing[image]" 
+                name="image" 
                 id="image"
                 type="file" 
                 class="form-control"
-                accept="image/*">
-            <div class="form-text">Optional: Upload an image (JPG, PNG, GIF - Max 5MB)</div>
+                accept="image/*"
+                required>
+            <div class="valid-feedback">Image selected!</div>
+            <div class="invalid-feedback">Please select an image.</div>
+            <div class="form-text">Upload an image (JPG, PNG, AVIF - Max 5MB)</div>
         </div>
 
         <!-- Price & Country Row -->

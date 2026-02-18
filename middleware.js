@@ -1,14 +1,13 @@
 const Listing = require("./models/listing");
-const ExpressError = require("./utils/ExpressError");
-const {listingSchema} = require("./schema.js");
-const {reviewsSchema} = require("./schema.js");
 const Review = require("./models/review");
+const ExpressError = require("./utils/ExpressError");
+const { listingSchema, reviewsSchema } = require("./schema.js");
 
 
-//check user is logged in or not
-module.exports.isLoggedIn = (req, res, next) =>{
+// ---------------- AUTH CHECK ----------------
+module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
-    req.session.redirectUrl = req.originalUrl ;
+    req.session.redirectUrl = req.originalUrl;
     req.flash("error", "You must be logged in");
     return res.redirect("/login");
   }
@@ -16,70 +15,72 @@ module.exports.isLoggedIn = (req, res, next) =>{
 };
 
 
-//redirect url after login
-module.exports.saveRedirectUrl = (req,res,next) =>{
-    if(req.session.redirectUrl){
-        res.locals.redirectUrl = req.session.redirectUrl ;
-    }
-    next();
-}
-
-
-//to made changes
-module.exports.isOwner = async (req,res,next) =>{
-  let {id} = req.params ;
-   let listing = await Listing.findById(id);
-    if (! listing.owner._id.equals(res.locals.currUser._id)) {
-     req.flash("error","Actions are only valid for the owners!") ;
-     return res.redirect(`/listings/${id}`) ;
+// ---------------- SAVE REDIRECT URL ----------------
+module.exports.saveRedirectUrl = (req, res, next) => {
+  if (req.session.redirectUrl) {
+    res.locals.redirectUrl = req.session.redirectUrl;
   }
-    next() ;
-}
+  next();
+};
 
+
+// ---------------- OWNER CHECK ----------------
+module.exports.isOwner = async (req, res, next) => {
+  const { id } = req.params;
+
+  const listing = await Listing.findById(id);
+
+  if (!listing) {
+    req.flash("error", "Listing not found");
+    return res.redirect("/listings");
+  }
+
+  if (!listing.owner.equals(res.locals.currUser._id)) {
+    req.flash("error", "Actions are only valid for the owner!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  next();
+};
+
+
+// ---------------- VALIDATE LISTING ----------------
 module.exports.validateListing = (req, res, next) => {
-  try {
-    if (!req.body.listing) {
-      throw new ExpressError(400, "Missing listing data");
-    }
+  const { error } = listingSchema.validate(req.body);
 
-    const { error } = listingSchema.validate({ listing: req.body.listing });
-    if (error) {
-      const errMsg = error.details.map(el => el.message).join(', ');
-      console.log("Validation error:", errMsg);
-      req.flash("error", errMsg);
-      if (req.method === "PUT") {
-        return res.redirect(`/listings/${req.params.id}/edit`);
-      } else {
-        return res.redirect("/listings/new");
-      }
-    }
-    next();
-  } catch (err) {
+  if (error) {
+    const errMsg = error.details.map(el => el.message).join(", ");
+    req.flash("error", errMsg);
+
     if (req.method === "PUT") {
-      req.flash("error", err.message);
       return res.redirect(`/listings/${req.params.id}/edit`);
     } else {
-      req.flash("error", err.message);
       return res.redirect("/listings/new");
     }
   }
-}
 
-module.exports.validateReview = (req,res,next) =>{
-let {error} = reviewsSchema.validate(req.body);
-    if(error) {
-      let errMsg = error.details[0].message;
-      console.log(errMsg) ;
-      throw new ExpressError(400,errMsg) ;
-      }
-      else {
-      next() ;
-    }
-}
+  next();
+};
 
 
+// ---------------- VALIDATE REVIEW ----------------
+module.exports.validateReview = (req, res, next) => {
+  const { error } = reviewsSchema.validate(req.body);
+
+  if (error) {
+    const errMsg = error.details.map(el => el.message).join(", ");
+    req.flash("error", errMsg);
+    return res.redirect("back");
+  }
+
+  next();
+};
+
+
+// ---------------- REVIEW AUTHOR CHECK ----------------
 module.exports.isReviewAuthor = async (req, res, next) => {
-  const { id, reviewId } = req.params; 
+  const { id, reviewId } = req.params;
+
   const review = await Review.findById(reviewId);
 
   if (!review) {
@@ -88,10 +89,9 @@ module.exports.isReviewAuthor = async (req, res, next) => {
   }
 
   if (!review.author.equals(res.locals.currUser._id)) {
-    req.flash("error", "Actions are only valid for the author of the review!");
+    req.flash("error", "Actions are only valid for the review author!");
     return res.redirect(`/listings/${id}`);
   }
 
   next();
 };
-

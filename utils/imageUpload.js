@@ -2,6 +2,10 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { cloudinary } = require('../cloudConfig.js');
 
+
+
+
+
 // File filter function
 const fileFilter = (req, file, cb) => {
     console.log('Processing file upload:', file.originalname);

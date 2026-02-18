@@ -1,48 +1,51 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
-const Listing = require("../models/listing.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingControllers = require("../controllers/listing.js");
-const { uploadMiddleware, handleMulterError } = require("../utils/imageUpload.js");
+const imageUpload = require("../utils/imageUpload.js");
 
-// Index - All Listings
+// Index
 router.get("/", wrapAsync(listingControllers.index));
 
-// New listings form
+// New
 router.get("/new", isLoggedIn, listingControllers.new);
 
-// Create Listing
-router.post("/", 
+// Create
+router.post(
+  "/",
   isLoggedIn,
-  uploadMiddleware.single('image'),  // Handle file upload
-  validateListing,                   // Validate the listing data
+  imageUpload.handleMulterError,
+  validateListing,
   wrapAsync(listingControllers.createListing)
 );
 
-// Show Single Listing
+// Show
 router.get("/:id", wrapAsync(listingControllers.showListing));
 
-// Edit Form
-router.get("/:id/edit", 
+// Edit
+router.get(
+  "/:id/edit",
   isLoggedIn,
   isOwner,
   wrapAsync(listingControllers.editRoute)
 );
 
-// Update Listing
-router.put("/:id", 
-  isLoggedIn, 
+// Update
+router.put(
+  "/:id",
+  isLoggedIn,
   isOwner,
-  uploadMiddleware.single('image'),  // Handle file upload
-  validateListing,                   // Validate the listing data      
+  imageUpload.handleMulterError,
+  validateListing,
   wrapAsync(listingControllers.updateRoute)
 );
 
-// Delete Listing
-router.delete("/:id", 
-  isLoggedIn, 
-  isOwner, 
+// Delete
+router.delete(
+  "/:id",
+  isLoggedIn,
+  isOwner,
   wrapAsync(listingControllers.deleteRoute)
 );
 

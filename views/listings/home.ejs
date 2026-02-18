@@ -1,9 +1,859 @@
 <% layout('/layouts/boilerplate') -%>
-<div class="container text-center mt-5">
-    <h1 class="main-heading">Welcome to Wanderlust!</h1>
-    <p class="lead type-writter  sub-heading">Find your next adventure or list your unique place to stay.</p>
-    <div class="mt-4">
-        <a href="/listings" class="btn btn-primary btn-lg m-2">View All Listings</a>
-        <a href="/listings/new" class="btn btn-success btn-lg m-2">Add New Listing</a>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── ROOT ── */
+:root {
+  --bg:       #ffffff;
+  --bg-soft:  #faf9f8;
+  --bg-muted: #f3f2f0;
+  --card:     #ffffff;
+  --border:   #e8e4e0;
+  --ink:      #111111;
+  --muted:    #888880;
+  --red:      #d0251a;
+  --red-deep: #a81e15;
+  --red-soft: rgba(208,37,26,0.08);
+  --white:    #ffffff;
+  --serif:    'Fraunces', Georgia, serif;
+  --sans:     'Geist', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ════════════════════════════════════════
+   HERO
+════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 2rem 5rem;
+  background: var(--bg);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(208,37,26,0.09) 0%, transparent 70%);
+  top: -250px; right: -200px;
+  animation: floatA 14s ease-in-out infinite alternate;
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(208,37,26,0.06) 0%, transparent 70%);
+  bottom: -100px; left: -150px;
+  animation: floatB 18s ease-in-out infinite alternate;
+}
+@keyframes floatA {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(-60px,80px) scale(1.2); }
+}
+@keyframes floatB {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(80px,-60px) scale(1.15); }
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  z-index: 1;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 920px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--red-soft);
+  border: 1px solid rgba(208,37,26,0.2);
+  border-radius: 2rem;
+  padding: 0.38rem 1.1rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 2rem;
+  animation: fadeDown 0.8s ease 0.2s both;
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 9vw, 7.8rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  animation: fadeUp 1s ease 0.4s both;
+}
+.hero-title em { font-style: italic; color: var(--red); }
+.hero-title .line { display: block; }
+
+.hero-sub {
+  margin: 1.8rem auto 0;
+  font-size: clamp(0.88rem, 2vw, 1.05rem);
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.75;
+  max-width: 540px;
+  animation: fadeUp 1s ease 0.6s both;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+  animation: fadeUp 1s ease 0.8s both;
+}
+
+.btn-primary-hero {
+  background: var(--red);
+  color: white;
+  border: none;
+  padding: 0.88rem 2.3rem;
+  border-radius: 3rem;
+  font-family: var(--sans);
+  font-size: 0.83rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 4px 20px rgba(208,37,26,0.3);
+}
+.btn-primary-hero:hover {
+  transform: translateY(-2px);
+  background: var(--red-deep);
+  box-shadow: 0 8px 32px rgba(208,37,26,0.4);
+  color: white;
+  text-decoration: none;
+}
+.btn-ghost-hero {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+  padding: 0.88rem 2.3rem;
+  border-radius: 3rem;
+  font-family: var(--sans);
+  font-size: 0.83rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost-hero:hover {
+  border-color: var(--ink);
+  background: var(--bg-muted);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: fadeUp 1s ease 1.2s both;
+}
+.scroll-dot {
+  width: 20px; height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+}
+.scroll-dot::after {
+  content: '';
+  width: 4px; height: 7px;
+  background: var(--red);
+  border-radius: 2px;
+  animation: scrollBob 1.6s ease-in-out infinite;
+}
+@keyframes scrollBob {
+  0%,100% { transform: translateY(0); opacity: 1; }
+  50%      { transform: translateY(8px); opacity: 0.25; }
+}
+
+/* ════════════════════════════════════════
+   STATS BAR
+════════════════════════════════════════ */
+.stats-bar {
+  background: var(--ink);
+  padding: 2.5rem 2rem;
+}
+.stats-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  display: block;
+}
+.stat-label {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.4rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+/* ════════════════════════════════════════
+   SECTION COMMONS
+════════════════════════════════════════ */
+.section {
+  padding: 7rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-tag {
+  display: inline-block;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.85rem;
+}
+.section-heading {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.section-heading em { font-style: italic; color: var(--red); }
+.section-sub {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.75;
+  max-width: 480px;
+}
+
+/* ════════════════════════════════════════
+   HOW IT WORKS
+════════════════════════════════════════ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+.step-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.step-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), #ff6b5b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.step-card:hover { border-color: rgba(208,37,26,0.2); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.07); }
+.step-card:hover::after { transform: scaleX(1); }
+.step-num {
+  font-family: var(--serif);
+  font-size: 5rem;
+  font-weight: 700;
+  color: rgba(0,0,0,0.04);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.step-icon {
+  width: 44px; height: 44px;
+  border-radius: 0.75rem;
+  background: var(--red-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  color: var(--red);
+}
+.step-title { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.55rem; }
+.step-desc  { font-size: 0.82rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+/* ════════════════════════════════════════
+   MARQUEE
+════════════════════════════════════════ */
+.marquee-section {
+  padding: 3.5rem 0;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.marquee-label {
+  text-align: center;
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.75rem;
+}
+.marquee-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.dest-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 3rem;
+  padding: 0.55rem 1.1rem;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink);
+  transition: border-color 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.dest-pill:hover { border-color: var(--red); color: var(--red); text-decoration: none; }
+.dest-pill .flag { font-size: 1rem; }
+
+/* ════════════════════════════════════════
+   SPLIT SECTIONS
+════════════════════════════════════════ */
+.split-section {
+  padding: 7rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.split-section.reverse { direction: rtl; }
+.split-section.reverse > * { direction: ltr; }
+.split-visual {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+}
+.split-visual-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5.5rem;
+}
+.split-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(208,37,26,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.split-floating-card {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.85rem 1.1rem;
+  z-index: 2;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.split-floating-card .fc-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+.split-floating-card .fc-value { font-family: var(--serif); font-size: 1.6rem; color: var(--red); font-weight: 700; line-height: 1.2; }
+.split-floating-card .fc-sub   { font-size: 0.67rem; color: var(--muted); margin-top: 1px; }
+
+.feature-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.feature-item { display: flex; align-items: flex-start; gap: 0.85rem; }
+.feature-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--red-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--red);
+}
+.feature-text h5 { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
+.feature-text p  { font-size: 0.78rem; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* ════════════════════════════════════════
+   TESTIMONIALS
+════════════════════════════════════════ */
+.testimonials-bg { background: var(--ink); }
+.testimonials-inner { max-width: 1200px; margin: 0 auto; padding: 7rem 2rem; }
+.testimonials-inner .section-heading { color: var(--white); }
+.testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 4rem; }
+.testi-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.testi-card:hover { transform: translateY(-4px); border-color: rgba(208,37,26,0.3); }
+.testi-stars { color: var(--red); font-size: 0.75rem; margin-bottom: 1rem; letter-spacing: 2px; }
+.testi-quote {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.65;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+.testi-author { display: flex; align-items: center; gap: 0.75rem; }
+.testi-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background: rgba(208,37,26,0.15);
+  border: 1px solid rgba(208,37,26,0.25);
+}
+.testi-name { font-size: 0.8rem; font-weight: 600; color: var(--white); }
+.testi-loc  { font-size: 0.68rem; color: rgba(255,255,255,0.35); }
+
+/* ════════════════════════════════════════
+   CATEGORIES
+════════════════════════════════════════ */
+.categories-inner { max-width: 1200px; margin: 0 auto; padding: 7rem 2rem; }
+.cat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 3.5rem; }
+.cat-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.cat-card:hover { transform: translateY(-5px); border-color: rgba(208,37,26,0.25); box-shadow: 0 10px 32px rgba(208,37,26,0.08); text-decoration: none; }
+.cat-icon  { font-size: 2.1rem; margin-bottom: 0.75rem; display: block; }
+.cat-name  { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
+.cat-count { font-size: 0.68rem; color: var(--muted); }
+
+/* ════════════════════════════════════════
+   CTA BAND
+════════════════════════════════════════ */
+.cta-band-wrap { padding: 6rem 2rem 0; }
+.cta-band {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 2rem;
+  background: var(--red);
+  padding: 5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-band::before {
+  content: '';
+  position: absolute;
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.cta-band::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+.cta-band h2 { font-family: var(--serif); font-size: clamp(2rem,5vw,3.5rem); font-weight: 300; color: var(--white); line-height: 1.15; position: relative; z-index: 1; }
+.cta-band h2 em { font-style: italic; }
+.cta-band p { margin: 1rem auto 0; font-size: 0.95rem; color: rgba(255,255,255,0.75); max-width: 460px; line-height: 1.7; font-weight: 300; position: relative; z-index: 1; }
+.cta-band-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; position: relative; z-index: 1; }
+
+.btn-white {
+  background: white;
+  color: var(--red);
+  border: none;
+  padding: 0.88rem 2.3rem;
+  border-radius: 3rem;
+  font-family: var(--sans);
+  font-size: 0.83rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); color: var(--red); text-decoration: none; }
+.btn-outline-white {
+  background: transparent;
+  color: white;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  padding: 0.88rem 2.3rem;
+  border-radius: 3rem;
+  font-family: var(--sans);
+  font-size: 0.83rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-outline-white:hover { border-color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.1); color: white; text-decoration: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .steps-grid    { grid-template-columns: 1fr; }
+  .split-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  .split-section.reverse { direction: ltr; }
+  .testi-grid    { grid-template-columns: 1fr; }
+  .cat-grid      { grid-template-columns: repeat(2,1fr); }
+  .stats-inner   { grid-template-columns: repeat(2,1fr); }
+  .stat-item     { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .stat-item:nth-child(2n) { border-bottom: none; }
+}
+@media (max-width: 560px) {
+  .hero-title { font-size: 3rem; }
+  .cat-grid   { grid-template-columns: repeat(2,1fr); }
+  .cta-band   { padding: 3rem 1.5rem; }
+  .cta-band-wrap { padding: 4rem 1.25rem 0; }
+  .section, .split-section { padding: 4rem 1.25rem; }
+  .testimonials-inner, .categories-inner { padding: 4rem 1.25rem; }
+}
+</style>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <i class="fa-solid fa-compass"></i>
+      <span>Wanderlust &mdash;</span> Your gateway to remarkable stays
     </div>
+    <h1 class="hero-title">
+      <span class="line">The world is wide.</span>
+      <span class="line"><em>Your next stay</em></span>
+      <span class="line">is waiting.</span>
+    </h1>
+    <p class="hero-sub">Discover handpicked homes, hidden cabins, beachside retreats, and mountain hideaways — or share your own space with travellers from around the globe.</p>
+    <div class="hero-actions">
+      <a href="/listings" class="btn-primary-hero"><i class="fa-solid fa-magnifying-glass"></i> Explore Stays</a>
+      <a href="/listings/new" class="btn-ghost-hero">List your place <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-dot"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ═══════ STATS ═══════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><span class="stat-num" data-count="12000">0</span><div class="stat-label">Listings worldwide</div></div>
+    <div class="stat-item reveal reveal-delay-1"><span class="stat-num" data-count="85">0</span><div class="stat-label">Countries covered</div></div>
+    <div class="stat-item reveal reveal-delay-2"><span class="stat-num" data-count="98">0</span><div class="stat-label">% guest satisfaction</div></div>
+    <div class="stat-item reveal reveal-delay-3"><span class="stat-num" data-count="4200">0</span><div class="stat-label">Happy hosts</div></div>
+  </div>
 </div>
+
+<!-- ═══════ HOW IT WORKS ═══════ -->
+<div class="section">
+  <div class="reveal">
+    <span class="section-tag">How it works</span>
+    <h2 class="section-heading">Travel made <em>effortless.</em></h2>
+    <p class="section-sub">Three simple steps stand between you and the trip of a lifetime.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal reveal-delay-1">
+      <div class="step-num">01</div>
+      <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+      <div class="step-title">Discover</div>
+      <p class="step-desc">Browse thousands of verified listings filtered by destination, dates, guests, and vibe. Every property is handchecked for quality.</p>
+    </div>
+    <div class="step-card reveal reveal-delay-2">
+      <div class="step-num">02</div>
+      <div class="step-icon"><i class="fa-solid fa-calendar-check"></i></div>
+      <div class="step-title">Book instantly</div>
+      <p class="step-desc">Reserve your stay with instant confirmation. Secure payments, transparent pricing — no hidden fees, no surprises at check-in.</p>
+    </div>
+    <div class="step-card reveal reveal-delay-3">
+      <div class="step-num">03</div>
+      <div class="step-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+      <div class="step-title">Experience</div>
+      <p class="step-desc">Pack your bags and arrive. Your host is ready to welcome you. From local tips to curated guides — every stay feels like home.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MARQUEE ═══════ -->
+<div class="marquee-section">
+  <div class="marquee-label">Popular destinations</div>
+  <div class="marquee-track">
+    <a href="/listings" class="dest-pill"><span class="flag">🏔️</span> Manali</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌊</span> Goa</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏯</span> Jaipur</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌿</span> Coorg</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🗼</span> Delhi</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌁</span> Darjeeling</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏖️</span> Pondicherry</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌄</span> Munnar</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏛️</span> Mysore</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🎭</span> Udaipur</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏝️</span> Andaman</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌺</span> Ooty</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏔️</span> Manali</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌊</span> Goa</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏯</span> Jaipur</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌿</span> Coorg</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🗼</span> Delhi</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌁</span> Darjeeling</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏖️</span> Pondicherry</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌄</span> Munnar</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏛️</span> Mysore</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🎭</span> Udaipur</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🏝️</span> Andaman</a>
+    <a href="/listings" class="dest-pill"><span class="flag">🌺</span> Ooty</a>
+  </div>
+</div>
+
+<!-- ═══════ SPLIT: Travellers ═══════ -->
+<div class="split-section">
+  <div class="split-visual reveal">
+    <div class="split-visual-inner">🌄</div>
+    <div class="split-floating-card">
+      <div class="fc-label">Average saving</div>
+      <div class="fc-value">₹3,200</div>
+      <div class="fc-sub">vs. hotels per night</div>
+    </div>
+  </div>
+  <div class="reveal reveal-delay-2">
+    <span class="section-tag">For travellers</span>
+    <h2 class="section-heading">Stay somewhere <em>memorable.</em></h2>
+    <p class="section-sub">Forget cookie-cutter hotels. Wanderlust connects you with unique spaces that have a soul — and hosts who genuinely care.</p>
+    <div class="feature-list">
+      <div class="feature-item"><div class="feature-dot"><i class="fa-solid fa-shield-halved"></i></div><div class="feature-text"><h5>Verified &amp; secure</h5><p>Every listing is reviewed and every payment is protected. Book with complete confidence.</p></div></div>
+      <div class="feature-item"><div class="feature-dot"><i class="fa-solid fa-tags"></i></div><div class="feature-text"><h5>Transparent pricing</h5><p>See the full price upfront — taxes, fees, everything. No checkout shocks.</p></div></div>
+      <div class="feature-item"><div class="feature-dot"><i class="fa-solid fa-headset"></i></div><div class="feature-text"><h5>24/7 guest support</h5><p>Our team is always on standby — before, during, and after your trip.</p></div></div>
+    </div>
+    <div style="margin-top:2rem;"><a href="/listings" class="btn-primary-hero">Start exploring</a></div>
+  </div>
+</div>
+
+<!-- ═══════ SPLIT: Hosts ═══════ -->
+<div class="split-section reverse">
+  <div class="split-visual reveal">
+    <div class="split-visual-inner">🏡</div>
+    <div class="split-floating-card">
+      <div class="fc-label">Avg. host earns</div>
+      <div class="fc-value">₹45K</div>
+      <div class="fc-sub">per month on Wanderlust</div>
+    </div>
+  </div>
+  <div class="reveal reveal-delay-2">
+    <span class="section-tag">For hosts</span>
+    <h2 class="section-heading">Turn your space into <em>income.</em></h2>
+    <p class="section-sub">Whether it's a spare room or an entire villa, listing on Wanderlust is free, fast, and designed to maximise your earnings.</p>
+    <div class="feature-list">
+      <div class="feature-item"><div class="feature-dot"><i class="fa-solid fa-bolt"></i></div><div class="feature-text"><h5>List in minutes</h5><p>A guided setup flow means your listing is live and accepting bookings the same day.</p></div></div>
+      <div class="feature-item"><div class="feature-dot"><i class="fa-solid fa-chart-line"></i></div><div class="feature-text"><h5>Smart pricing tools</h5><p>Our algorithm suggests optimal rates based on demand, season, and local comparisons.</p></div></div>
+      <div class="feature-item"><div class="feature-dot"><i class="fa-solid fa-hand-holding-heart"></i></div><div class="feature-text"><h5>Host protection</h5><p>Host guarantee covers damage, cancellations, and gives you complete peace of mind.</p></div></div>
+    </div>
+    <div style="margin-top:2rem;"><a href="/listings/new" class="btn-primary-hero">Become a host</a></div>
+  </div>
+</div>
+
+<!-- ═══════ CATEGORIES ═══════ -->
+<div class="categories-inner">
+  <div class="reveal" style="text-align:center;">
+    <span class="section-tag">Browse by type</span>
+    <h2 class="section-heading">Find your <em>kind of stay.</em></h2>
+  </div>
+  <div class="cat-grid">
+    <a href="/listings" class="cat-card reveal reveal-delay-1"><span class="cat-icon">🏖️</span><div class="cat-name">Beach Houses</div><div class="cat-count">340+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-2"><span class="cat-icon">🏔️</span><div class="cat-name">Mountain Cabins</div><div class="cat-count">210+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-3"><span class="cat-icon">🌿</span><div class="cat-name">Jungle Retreats</div><div class="cat-count">190+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-4"><span class="cat-icon">🏯</span><div class="cat-name">Heritage Havelis</div><div class="cat-count">120+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-1"><span class="cat-icon">⛺</span><div class="cat-name">Glamping Sites</div><div class="cat-count">95+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-2"><span class="cat-icon">🏙️</span><div class="cat-name">City Apartments</div><div class="cat-count">580+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-3"><span class="cat-icon">🚢</span><div class="cat-name">Houseboat Stays</div><div class="cat-count">60+ listings</div></a>
+    <a href="/listings" class="cat-card reveal reveal-delay-4"><span class="cat-icon">🌾</span><div class="cat-name">Farm Stays</div><div class="cat-count">150+ listings</div></a>
+  </div>
+</div>
+
+<!-- ═══════ TESTIMONIALS ═══════ -->
+<div class="testimonials-bg">
+  <div class="testimonials-inner">
+    <div class="reveal" style="text-align:center;">
+      <span class="section-tag">What guests say</span>
+      <h2 class="section-heading">Real stories, <em>real stays.</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"The cabin in Manali was unlike anything I'd ever experienced. Woke up to snow on the pines and a fireplace crackling. Wanderlust made it effortless."</p>
+        <div class="testi-author"><div class="testi-avatar">🧑</div><div><div class="testi-name">Arjun Mehra</div><div class="testi-loc">Mumbai, India</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Listed my Goa villa and had bookings within 48 hours. The host dashboard is clean and payouts are always on time. Couldn't be happier."</p>
+        <div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Priya Nair</div><div class="testi-loc">Bangalore, India</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Found a heritage haveli in Jaipur that felt like living in a Rajasthani painting. The host gave us a rooftop dinner with folk musicians. Magical."</p>
+        <div class="testi-author"><div class="testi-avatar">🧔</div><div><div class="testi-name">Rohan Kapoor</div><div class="testi-loc">Delhi, India</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CTA BAND ═══════ -->
+<div class="cta-band-wrap">
+  <div class="cta-band reveal">
+    <h2>Ready to start your<br><em>next adventure?</em></h2>
+    <p>Join over 12,000 travellers who discovered their perfect stay on Wanderlust. Your story starts here.</p>
+    <div class="cta-band-actions">
+      <a href="/listings" class="btn-white"><i class="fa-solid fa-compass"></i> Browse all stays</a>
+      <a href="/listings/new" class="btn-outline-white">Become a host <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Scroll reveal */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* Animated counters */
+function animateCount(el) {
+  const target = +el.dataset.count;
+  const start = performance.now();
+  (function tick(now) {
+    const p = Math.min((now - start) / 1800, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = Math.floor(ease * target);
+    el.textContent = val.toLocaleString('en-IN') + (target >= 10000 ? '+' : target === 98 ? '%' : '+');
+    if (p < 1) requestAnimationFrame(tick);
+  })(start);
+}
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCount(e.target); countObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num[data-count]').forEach(el => countObs.observe(el));
+</script>

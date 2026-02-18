@@ -1,20 +1,180 @@
+<style>
+  .flash-wrap {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 360px;
+    width: calc(100vw - 2.5rem);
+  }
 
-<% if(success && success.length) { %>
-<div class="container mt-3">
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="fas fa-check-circle me-2"></i>
-    <%= success %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-</div>
-<% } %>
+  .flash {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    border: 1px solid;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    font-family: 'Geist', 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 500;
+    line-height: 1.5;
+    animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+    position: relative;
+    overflow: hidden;
+  }
 
-<% if(error && error.length) { %>
-<div class="container mt-3">
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="fas fa-exclamation-circle me-2"></i>
-    <%= error %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  /* shimmer line at top */
+  .flash::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2.5px;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .flash-success {
+    background: rgba(255,255,255,0.97);
+    border-color: #c8ecd6;
+    color: #1a5c35;
+  }
+  .flash-success::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
+  .flash-success .flash-icon {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+
+  .flash-error {
+    background: rgba(255,255,255,0.97);
+    border-color: #fecdd3;
+    color: #7f1d1d;
+  }
+  .flash-error::before { background: linear-gradient(90deg, #d0251a, #f87171); }
+  .flash-error .flash-icon {
+    background: #fee2e2;
+    color: #d0251a;
+  }
+
+  .flash-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+  }
+
+  .flash-body { flex: 1; padding-top: 0.15rem; }
+  .flash-title {
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.1rem;
+  }
+  .flash-msg { opacity: 0.8; font-weight: 400; }
+
+  .flash-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.75rem;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+    color: inherit;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+  .flash-close:hover { opacity: 1; }
+
+  /* progress bar auto-dismiss */
+  .flash-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    border-radius: 0 0 1rem 1rem;
+    animation: shrink 4s linear forwards;
+  }
+  .flash-success .flash-progress { background: #22c55e; }
+  .flash-error   .flash-progress { background: #d0251a; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px) scale(0.95); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateX(0) scale(1); max-height: 100px; margin-bottom: 0; }
+    to   { opacity: 0; transform: translateX(40px) scale(0.95); max-height: 0; margin-bottom: -0.6rem; }
+  }
+  @keyframes shrink {
+    from { width: 100%; }
+    to   { width: 0%; }
+  }
+
+  .flash.dismissing {
+    animation: slideOut 0.3s ease forwards;
+  }
+
+  @media (max-width: 480px) {
+    .flash-wrap {
+      top: auto;
+      bottom: 1rem;
+      right: 1rem;
+      left: 1rem;
+      max-width: 100%;
+      width: auto;
+    }
+  }
+</style>
+
+<div class="flash-wrap" id="flashWrap">
+
+  <% if(success && success.length) { %>
+  <div class="flash flash-success" id="flashSuccess">
+    <div class="flash-icon"><i class="fa-solid fa-check"></i></div>
+    <div class="flash-body">
+      <div class="flash-title">Success</div>
+      <div class="flash-msg"><%= success %></div>
+    </div>
+    <button class="flash-close" onclick="dismissFlash('flashSuccess')">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="flash-progress"></div>
   </div>
+  <% } %>
+
+  <% if(error && error.length) { %>
+  <div class="flash flash-error" id="flashError">
+    <div class="flash-icon"><i class="fa-solid fa-xmark"></i></div>
+    <div class="flash-body">
+      <div class="flash-title">Error</div>
+      <div class="flash-msg"><%= error %></div>
+    </div>
+    <button class="flash-close" onclick="dismissFlash('flashError')">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="flash-progress"></div>
+  </div>
+  <% } %>
+
 </div>
-<% } %>
+
+<script>
+  function dismissFlash(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('dismissing');
+    setTimeout(() => el.remove(), 300);
+  }
+
+  // Auto-dismiss after 4s
+  setTimeout(() => dismissFlash('flashSuccess'), 4000);
+  setTimeout(() => dismissFlash('flashError'),   4500);
+</script>

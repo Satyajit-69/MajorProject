@@ -1,58 +1,391 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <!-- Left: Logo + Explore -->
-    <a class="navbar-brand" href="/root">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --ink: #1a1a1a;
+    --muted: #717171;
+    --border: #dddddd;
+    --bg: #ffffff;
+    --accent: #e8441a;
+    --hover-bg: #f7f7f5;
+    --radius: 2rem;
+    --font: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .main-navbar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    font-family: var(--font);
+  }
+
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ── LOGO ── */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-logo i { font-size: 1.3rem; }
+  .nav-logo span { color: var(--ink); }
+
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s;
+    background: var(--bg);
+    flex: 1;
+    max-width: 580px;
+  }
+  .search-bar:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+  .search-seg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-right: 1px solid var(--border);
+    min-width: 0;
+    flex: 1;
+  }
+  .search-seg:last-of-type { border-right: none; }
+  .search-seg:hover { background: var(--hover-bg); }
+
+  .search-seg h6 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+    white-space: nowrap;
+    font-family: var(--font);
+  }
+  .search-seg small {
+    font-size: 0.65rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-family: var(--font);
+  }
+
+  .search-btn {
+    background: var(--accent);
+    border: none;
+    padding: 0 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s;
+    flex-shrink: 0;
+  }
+  .search-btn:hover { background: #d03916; }
+  .search-btn i { color: white; font-size: 0.85rem; }
+
+  /* ── RIGHT SIDE ── */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .nav-text-link {
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.45rem 0.75rem;
+    border-radius: 1.5rem;
+    transition: background 0.15s;
+    white-space: nowrap;
+    font-family: var(--font);
+  }
+  .nav-text-link:hover { background: var(--hover-bg); }
+
+  .nav-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.15s;
+    font-size: 0.9rem;
+  }
+  .nav-icon-link:hover { background: var(--hover-bg); }
+
+  .nav-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 0.25rem;
+  }
+
+  /* Auth buttons */
+  .auth-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    padding: 0.3rem 0.4rem 0.3rem 0.75rem;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+    background: var(--bg);
+  }
+  .auth-group:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
+  .auth-group i.fa-bars { font-size: 0.8rem; color: var(--ink); }
+  .auth-group .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+  }
+
+  .auth-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink);
+    padding: 0;
+    transition: color 0.15s;
+  }
+
+  /* ── MOBILE TOGGLER ── */
+  .nav-toggler {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 1rem;
+  }
+
+  /* ── MOBILE SEARCH (small screens) ── */
+  .search-bar-mobile {
+    display: none;
+    width: 100%;
+    margin-top: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    overflow: hidden;
+    background: var(--hover-bg);
+    padding: 0.65rem 1rem;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .search-bar-mobile i { color: var(--muted); font-size: 0.85rem; }
+  .search-bar-mobile span {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--font);
+  }
+
+  /* Collapse panel */
+  .nav-collapse {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 1rem;
+    right: 1rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 0.75rem;
+    z-index: 998;
+  }
+  .nav-collapse.open { display: block; }
+  .nav-collapse a, .nav-collapse button {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+  .nav-collapse a:hover, .nav-collapse button:hover { background: var(--hover-bg); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .search-bar { display: none; }
+    .search-bar-mobile { display: flex; }
+    .nav-text-link:not(.always-show) { display: none; }
+    .nav-toggler { display: block; }
+    .main-navbar { padding: 0.65rem 1rem; position: relative; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-logo .logo-text { display: none; }
+  }
+</style>
+
+<nav class="main-navbar">
+  <div class="navbar-inner">
+
+    <!-- Logo -->
+    <a class="nav-logo" href="/">
       <i class="fa-solid fa-compass"></i>
+      <span class="logo-text">wanderlust</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav me-auto">
-        <a class="nav-link" href="/listings" style="font-size: small;">Explore</a>
+    <!-- Search bar (desktop) -->
+    <div class="search-bar">
+      <div class="search-seg">
+        <h6>Where</h6>
+        <small>Search destinations</small>
       </div>
+      <div class="search-seg">
+        <h6>Check in</h6>
+        <small>Add dates</small>
+      </div>
+      <div class="search-seg">
+        <h6>Check out</h6>
+        <small>Add dates</small>
+      </div>
+      <div class="search-seg">
+        <h6>Who</h6>
+        <small>Add guests</small>
+      </div>
+      <button class="search-btn" type="button">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
 
-      <!-- Center: Search Bar -->
-      <div class="mx-auto d-none d-md-flex align-items-center search-bar-custom">
-        <div class="search-section">
-          <h6 class="mb-0">Where</h6>
-          <small class="text-muted">Search destinations</small>
-        </div>
-        <div class="search-section">
-          <h6 class="mb-0">Check in</h6>
-          <small class="text-muted">Add dates</small>
-        </div>
-        <div class="search-section">
-          <h6 class="mb-0">Check out</h6>
-          <small class="text-muted">Add dates</small>
-        </div>
-        <div class="search-section">
-          <h6 class="mb-0">Who</h6>
-          <small class="text-muted">Add guests</small>
-        </div>
-        <button class="search-btn"><i class="fa fa-search text-white"></i></button>
-      </div>
+    <!-- Right side -->
+    <div class="nav-right">
+      <a class="nav-text-link" href="/listings/new">Become a host</a>
+      <a class="nav-icon-link" href="/language"><i class="fa-solid fa-globe"></i></a>
+      <div class="nav-divider"></div>
 
-      <!-- Right: Auth + Host -->
-      <div class="navbar-nav ms-auto align-items-center">
-        <a class="nav-link" href="/listings/new" style="font-size: small;">Become a host</a>
-        <a class="nav-link" href="/language"><i class="fa-solid fa-globe"></i></a>
-        <% if (!currUser) { %>
-          <form action="/signup" class="d-inline">
-            <button class="btn btn-outline-secondary btn-sm">Sign Up</button>
-          </form>
-          &nbsp;
-          <form action="/login" class="d-inline">
-            <button class="btn btn-outline-secondary btn-sm">Log in</button>
-          </form>
-        <% } else { %>
-          <form action="/logout" class="d-inline">
-            <button class="btn btn-outline-secondary btn-sm">Log out</button>
-          </form>
-        <% } %>
-      </div>
+      <% if (!currUser) { %>
+        <!-- Logged out: hamburger + avatar menu -->
+        <div class="auth-group" id="authToggle">
+          <i class="fa-solid fa-bars"></i>
+          <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+        </div>
+        <div class="nav-collapse" id="authMenu">
+          <a href="/signup">Sign up</a>
+          <a href="/login">Log in</a>
+          <hr style="margin: 0.4rem 0; border-color: var(--border);">
+          <a href="/listings/new">Become a host</a>
+          <a href="/listings">Explore stays</a>
+        </div>
+      <% } else { %>
+        <!-- Logged in -->
+        <div class="auth-group" id="authToggle">
+          <i class="fa-solid fa-bars"></i>
+          <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+        </div>
+        <div class="nav-collapse" id="authMenu">
+          <a href="/logout">Log out</a>
+          <a href="/listings/new">Become a host</a>
+        </div>
+      <% } %>
+
+      <!-- Mobile hamburger -->
+      <button class="nav-toggler" id="mobileToggler">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
   </div>
+
+  <!-- Mobile search pill -->
+  <div class="search-bar-mobile">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>Where to?</span>
+  </div>
+
+  <!-- Mobile nav collapse -->
+  <div class="nav-collapse" id="mobileMenu">
+    <a href="/listings">Explore</a>
+    <a href="/listings/new">Become a host</a>
+    <a href="/language">Language</a>
+    <hr style="margin: 0.4rem 0; border-color: var(--border);">
+    <% if (!currUser) { %>
+      <a href="/signup">Sign up</a>
+      <a href="/login">Log in</a>
+    <% } else { %>
+      <a href="/logout">Log out</a>
+    <% } %>
+  </div>
 </nav>
+
+<script>
+  // Auth dropdown
+  const authToggle = document.getElementById('authToggle');
+  const authMenu   = document.getElementById('authMenu');
+  if (authToggle) {
+    authToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      authMenu.classList.toggle('open');
+      const mob = document.getElementById('mobileMenu');
+      if (mob) mob.classList.remove('open');
+    });
+  }
+
+  // Mobile hamburger
+  const mobileToggler = document.getElementById('mobileToggler');
+  const mobileMenu    = document.getElementById('mobileMenu');
+  if (mobileToggler) {
+    mobileToggler.addEventListener('click', e => {
+      e.stopPropagation();
+      mobileMenu.classList.toggle('open');
+      if (authMenu) authMenu.classList.remove('open');
+    });
+  }
+
+  // Close on outside click
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-collapse').forEach(m => m.classList.remove('open'));
+  });
+</script>

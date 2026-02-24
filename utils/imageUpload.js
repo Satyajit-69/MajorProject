@@ -41,7 +41,7 @@ const fileFilter = (req, file, cb) => {
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'wanderlust',
+        folder: 'Earthy',
         allowed_formats: ['jpg', 'jpeg', 'png', 'avif'],
         transformation: [{
             width: 800,

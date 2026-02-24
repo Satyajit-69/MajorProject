@@ -1,54 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earthy Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #717171;
+      --border: #e0ddd8;
+      --bg: #ffffff;
+      --accent: #3d7a4f;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: #f0ede8; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #faf9f7;
+      border-top: 1px solid var(--border);
+      font-family: var(--font);
+    }
+
+    /* Top columns */
+    .f-customer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem 2rem;
+    }
+
+    .f-col .heading {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .f-col a {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 0.6rem;
+      transition: color 0.15s;
+    }
+    .f-col a:hover { color: var(--accent); }
+
+    /* Divider */
+    footer hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* Bottom bar */
+    .f-info {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .f-info-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* Logo mini */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+    }
+    .footer-logo .logo-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer-logo .logo-icon i { color: #fff; font-size: 0.55rem; }
+    .footer-logo span {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .footer-logo .dot { color: var(--accent); }
+
+    .f-separator {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .f-info-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .f-info-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .f-info-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .f-info-links a:hover { color: var(--ink); }
+
+    .f-socials {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .f-socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .f-socials a:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .f-customer { grid-template-columns: 1fr 1fr; padding: 2rem 1.25rem 1.5rem; }
+      .f-info { flex-direction: column; align-items: flex-start; padding: 1rem 1.25rem; }
+      .f-info-right { flex-wrap: wrap; gap: 0.75rem; }
+    }
+    @media (max-width: 420px) {
+      .f-customer { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
 <footer>
-    
-    <div class="f-customer mt-4">
-        <div class="support">
+  <div class="f-customer">
 
-        <div class="heading mt-3">Support</div>
-        <br>
-        <a href="hello" class="mb-1 mt-1">AirCover</a>
-        <a href="hello" class="mb-1 mt-1">Anti-discrimination</a>
-        <a href="hello" class="mb-1 mt-1">Disibility Support</a>
-        <a href="hello" class="mb-1 mt-1">Cancellation opitons</a>
-        <a href="hello" class="mb-1 mt-1">Report neighbourhood concern</a>
-        </div>
-        <div class="hosting">
-          <div class="heading mt-3">Hosting</div>
-            <br>
-           <a href="" class="mb-1 mt-1">Airbnb your home</a>
-           <a href="" class="mb-1 mt-1">Hosting resources</a>
-           <a href="" class="mb-1 mt-1">Community forum</a>
-           <a href="" class="mb-1 mt-1">Hosting responsibly</a>
-           <a href="" class="mb-1 mt-1">Join a free Hosting class</a>
-           <a href="" class="mb-1 mt-1">Find a co-host</a>
-        </div>
-        <div class="airbnb">
-
-           <div class="heading mt-3">Airbnb</div>
-            <br>
-           <a href="" class="mb-1 mt-1">2025 Summer Release</a>
-           <a href="" class="mb-1 mt-1">Newsroom</a>
-           <a href="" class="mb-1 mt-1">New features</a>
-           <a href="" class="mb-1 mt-1">Careers</a>
-           <a href="" class="mb-1 mt-1">Inverstors</a>
-           <a href="" class="mb-1 mt-1">Airbnb.org emergency stays</a>
-
-        </div>
+    <div class="f-col support">
+      <div class="heading">Support</div>
+      <a href="#">Help Centre</a>
+      <a href="#">AirCover</a>
+      <a href="#">Anti-discrimination</a>
+      <a href="#">Disability support</a>
+      <a href="#">Cancellation options</a>
+      <a href="#">Report a concern</a>
     </div>
 
-     <hr>
-
-    <div class="f-info"> 
-
-        <div class="f-info-socials">
-            &copy; Wanderlust Private Limited
-            <i class="fa-brands fa-facebook"></i>
-            <i class="fa-brands fa-instagram"></i>
-            <i class="fa-brands fa-linkedin"></i>
-        </div>
-      
-        <div class="f-info-links">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-        </div>
+    <div class="f-col hosting">
+      <div class="heading">Hosting</div>
+      <a href="#">Host your home on Earthy</a>
+      <a href="#">Hosting resources</a>
+      <a href="#">Community forum</a>
+      <a href="#">Hosting responsibly</a>
+      <a href="#">Join a free hosting class</a>
+      <a href="#">Find a co-host</a>
     </div>
+
+    <div class="f-col company">
+      <div class="heading">Earthy</div>
+      <a href="#">2025 Summer Release</a>
+      <a href="#">Newsroom</a>
+      <a href="#">New features</a>
+      <a href="#">Careers</a>
+      <a href="#">Investors</a>
+      <a href="#">Earthy.org emergency stays</a>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="f-info">
+    <div class="f-info-left">
+      <a class="footer-logo" href="/">
+        <div class="logo-icon"><i class="fa-solid fa-leaf"></i></div>
+        <span>earthy<span class="dot">.</span></span>
+      </a>
+      <div class="f-separator"></div>
+      <span>&copy; 2025 Earthy Private Limited</span>
+    </div>
+
+    <div class="f-info-right">
+      <div class="f-info-links">
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/sitemap">Sitemap</a>
+      </div>
+      <div class="f-socials">
+        <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
 </footer>
+
+</body>
+</html>

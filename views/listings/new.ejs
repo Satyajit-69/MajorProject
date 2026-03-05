@@ -1,178 +1,516 @@
 <% layout('/layouts/boilerplate') -%>
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
     :root {
-        --primary-red: #d90429;
-        --dark-red: #8d0801;
-        --classic-black: #1a1a1a;
-        --pure-white: #ffffff;
+        --green: #2a9d5c;
+        --green-dark: #1e7a44;
+        --green-light: #d0f0e1;
+        --green-pale: #f0faf5;
+        --ink: #0d1f16;
+        --ink-muted: #4a6657;
+        --white: #ffffff;
+        --border: #b8ddc9;
     }
 
     body {
-        background-color: var(--pure-white);
-        font-family: 'Times New Roman', Times, serif; /* Classic Serif Font */
-        color: var(--classic-black);
+        background-color: var(--white);
+        font-family: 'Nunito', sans-serif;
+        color: var(--ink);
+        margin: 0;
     }
 
-    .form-container {
-        border: 2px solid var(--classic-black);
-        padding: 40px;
-        background-color: var(--pure-white);
-        box-shadow: 10px 10px 0px var(--primary-red);
+    .listing-page {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin: 3rem;
     }
 
-    h1 {
+    /* ---- LEFT PANEL ---- */
+    .left-panel {
+        background-color: var(--green);
+        padding: 60px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .left-panel::before {
+        content: '';
+        position: absolute;
+        top: -80px; right: -80px;
+        width: 320px; height: 320px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.12);
+    }
+
+    .left-panel::after {
+        content: '';
+        position: absolute;
+        bottom: -60px; left: -60px;
+        width: 240px; height: 240px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.08);
+    }
+
+    .brand-tag {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 0.72rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.65);
+        margin-bottom: 40px;
+    }
+
+    .left-panel h2 {
+        font-family: 'Playfair Display', serif;
         font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: var(--classic-black);
-        border-bottom: 4px solid var(--primary-red);
+        font-size: clamp(2rem, 3.5vw, 2.8rem);
+        line-height: 1.2;
+        color: var(--white);
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .left-panel h2 em { font-style: italic; color: #a3f7c4; }
+
+    .left-panel p {
+        font-size: 1rem;
+        font-weight: 400;
+        color: rgba(255,255,255,0.75);
+        line-height: 1.75;
+        max-width: 360px;
+        margin-bottom: 48px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .illustration { position: relative; z-index: 1; margin-top: 8px; }
+    .illustration svg {
+        width: 100%; max-width: 400px;
+        filter: drop-shadow(4px 8px 16px rgba(0,0,0,0.15));
+    }
+
+    .badge-float {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.18);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 100px;
+        padding: 10px 18px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--white);
+        margin-top: 28px;
+        margin-right: 12px;
+    }
+
+    .badge-float span.dot {
+        width: 8px; height: 8px;
+        background: #a3f7c4;
+        border-radius: 50%;
         display: inline-block;
-        margin-bottom: 30px !important;
     }
 
-    .form-label {
-        font-weight: bold;
+    /* ---- RIGHT PANEL ---- */
+    .right-panel {
+        background: var(--white);
+        padding: 60px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .right-panel h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 900;
+        font-size: clamp(1.7rem, 2.5vw, 2.1rem);
+        letter-spacing: -0.5px;
+        margin-bottom: 8px;
+        color: var(--ink);
+    }
+
+    .right-panel .sub {
+        color: var(--ink-muted);
+        font-size: 0.92rem;
+        font-weight: 500;
+        margin-bottom: 36px;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .field { margin-bottom: 18px; }
+
+    .field label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1px;
         text-transform: uppercase;
-        font-size: 0.9rem;
-        color: var(--classic-black);
+        color: var(--ink-muted);
+        margin-bottom: 7px;
     }
 
-    .form-control {
-        border: 1px solid var(--classic-black);
-        border-radius: 0; /* Sharp edges for classic look */
-        padding: 12px;
-    }
-
-    .form-control:focus {
-        border-color: var(--primary-red);
-        box-shadow: 0 0 0 0.25 red inset; /* Subtle red focus */
+    .field input,
+    .field textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--ink);
+        background: var(--green-pale);
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
         outline: none;
     }
 
-    .btn-ultimate {
-        background-color: var(--primary-red);
+    .field input::placeholder,
+    .field textarea::placeholder { color: #9dbdad; font-weight: 400; }
+
+    .field input:focus,
+    .field textarea:focus {
+        border-color: var(--green);
+        background: var(--white);
+        box-shadow: 0 0 0 3px rgba(42,157,92,0.15);
+    }
+
+    .field .err {
+        font-size: 0.76rem;
+        color: #e05252;
+        margin-top: 5px;
+        display: none;
+        font-weight: 600;
+    }
+
+    .was-validated .field input:invalid ~ .err,
+    .was-validated .field textarea:invalid ~ .err { display: block; }
+
+    .was-validated .field input:invalid,
+    .was-validated .field textarea:invalid {
+        border-color: #e05252;
+        box-shadow: 0 0 0 3px rgba(224,82,82,0.12);
+        background: #fff8f8;
+    }
+
+    .file-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border: 1.5px dashed var(--border);
+        border-radius: 8px;
+        background: var(--green-pale);
+        cursor: pointer;
+        transition: border-color 0.2s, background 0.2s;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--ink-muted);
+    }
+
+    .file-label:hover { border-color: var(--green); background: var(--green-light); }
+    .file-label svg { flex-shrink: 0; color: var(--green); }
+    input[type="file"] { display: none; }
+
+    /* ─── SWIPE BUTTON ─── */
+    .swipe-wrap {
+        margin-top: 10px;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .swipe-track {
+        position: relative;
+        height: 58px;
+        background: var(--green-pale);
+        border: 2px solid var(--border);
+        border-radius: 100px;
+        overflow: hidden;
+        cursor: default;
+    }
+
+    .swipe-fill {
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 58px; /* starts at thumb width */
+        background: var(--green);
+        border-radius: 100px;
+        transition: none;
+        pointer-events: none;
+    }
+
+    .swipe-thumb {
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px; height: 50px;
+        background: var(--green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: white;
-        border: 2px solid var(--classic-black);
-        border-radius: 0;
-        font-weight: bold;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
+        cursor: grab;
+        z-index: 2;
+        box-shadow: 0 4px 14px rgba(42,157,92,0.45);
+        transition: box-shadow 0.2s;
+        touch-action: none;
     }
 
-    .btn-ultimate:hover {
-        background-color: var(--classic-black);
-        color: var(--pure-white);
-        transform: translate(-2px, -2px);
-        box-shadow: 4px 4px 0px var(--primary-red);
+    .swipe-thumb:active { cursor: grabbing; box-shadow: 0 6px 20px rgba(42,157,92,0.55); }
+
+    .swipe-label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        color: var(--green-dark);
+        pointer-events: none;
+        transition: opacity 0.2s;
     }
 
-    .form-text {
-        color: var(--dark-red);
-        font-style: italic;
+    /* success state */
+    .swipe-track.success .swipe-fill {
+        width: 100% !important;
+        transition: width 0.3s ease;
+    }
+
+    .swipe-track.success .swipe-label {
+        color: white;
+        opacity: 1 !important;
+    }
+
+    .swipe-track.success .swipe-thumb {
+        background: white;
+        color: var(--green);
+        left: calc(100% - 54px) !important;
+    }
+
+    @media (max-width: 900px) {
+        .listing-page { grid-template-columns: 1fr; }
+        .left-panel, .right-panel { padding: 48px 32px; }
+        .illustration svg { max-width: 280px; }
+    }
+
+    @media (max-width: 520px) {
+        .form-row { grid-template-columns: 1fr; }
+        .left-panel, .right-panel { padding: 36px 20px; }
     }
 </style>
 
-<div class="container mt-5 mb-5 d-flex justify-content-center">
-    <div class="col-md-8 form-container">
-        <div class="text-center">
-            <h1 class="mb-4">Create New Listing</h1>
+<div class="listing-page">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="brand-tag">Earthy &mdash; New Listing</div>
+        <h2>Share your<br><em>perfect place</em><br>with the world.</h2>
+        <p>Fill in the details and let travelers discover your unique space. Great listings get booked fast.</p>
+
+        <div class="illustration">
+            <svg viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="100" y="110" width="220" height="140" rx="4" fill="white" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/>
+                <polyline points="80,115 210,30 340,115" fill="rgba(255,255,255,0.1)" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                <rect x="175" y="175" width="70" height="75" rx="4" fill="#a3f7c4" stroke="white" stroke-width="2"/>
+                <circle cx="235" cy="215" r="5" fill="white"/>
+                <rect x="118" y="145" width="55" height="45" rx="3" fill="#d0f0e1" stroke="white" stroke-width="2"/>
+                <line x1="145" y1="145" x2="145" y2="190" stroke="white" stroke-width="1.5"/>
+                <line x1="118" y1="167" x2="173" y2="167" stroke="white" stroke-width="1.5"/>
+                <rect x="247" y="145" width="55" height="45" rx="3" fill="#d0f0e1" stroke="white" stroke-width="2"/>
+                <line x1="274" y1="145" x2="274" y2="190" stroke="white" stroke-width="1.5"/>
+                <line x1="247" y1="167" x2="302" y2="167" stroke="white" stroke-width="1.5"/>
+                <rect x="270" y="42" width="28" height="46" rx="2" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="2"/>
+                <circle cx="284" cy="28" r="11" fill="rgba(255,255,255,0.5)" stroke="white" stroke-width="1.2"/>
+                <circle cx="298" cy="18" r="8" fill="rgba(255,255,255,0.35)" stroke="white" stroke-width="1"/>
+                <circle cx="308" cy="10" r="5" fill="rgba(255,255,255,0.2)"/>
+                <rect x="60" y="248" width="300" height="8" rx="4" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="360" cy="80" r="32" fill="white"/>
+                <text x="360" y="74" text-anchor="middle" font-family="Playfair Display, serif" font-weight="900" font-size="13" fill="#0d1f16">4.9</text>
+                <text x="360" y="93" text-anchor="middle" font-size="15" fill="#2a9d5c">★★★</text>
+                <circle cx="62" cy="80" r="28" fill="white"/>
+                <path d="M62 62 C54 62 48 68 48 76 C48 86 62 98 62 98 C62 98 76 86 76 76 C76 68 70 62 62 62Z" fill="#a3f7c4" stroke="#2a9d5c" stroke-width="2"/>
+                <circle cx="62" cy="76" r="5" fill="#2a9d5c"/>
+            </svg>
         </div>
-        
-        <form action="/listings" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
 
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input 
-                    name="listing[title]" 
-                    id="title"
-                    type="text" 
-                    class="form-control" 
-                    placeholder="E.G. LUXURY VILLA" 
-                    required>
-                <div class="invalid-feedback">Title is required.</div>
+        <div>
+            <span class="badge-float"><span class="dot"></span> Live in minutes</span>
+            <span class="badge-float">🌍 Global reach</span>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <h1>Create New Listing</h1>
+        <p class="sub">Tell us about your property — the more detail, the better.</p>
+
+        <form action="/listings" method="POST" id="listingForm" class="needs-validation" novalidate enctype="multipart/form-data">
+
+            <div class="field">
+                <label for="title">Title</label>
+                <input name="listing[title]" id="title" type="text" placeholder="e.g. Cozy Mountain Cabin" required>
+                <div class="err">Please add a title.</div>
             </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea 
-                    name="listing[description]"
-                    id="description"
-                    class="form-control"
-                    rows="4"
-                    placeholder="Provide details..." 
-                    required></textarea>
-                <div class="invalid-feedback">Description is required.</div>
-            </div>
-        
-            <div class="mb-3">
-                <label for="image" class="form-label">Upload Image</label>
-                <input 
-                    name="image" 
-                    id="image"
-                    type="file" 
-                    class="form-control"
-                    accept="image/*"
-                    required>
-                <div class="form-text">JPG, PNG, AVIF - Max 5MB</div>
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea name="listing[description]" id="description" rows="3" placeholder="Describe what makes your space special..." required></textarea>
+                <div class="err">Please add a description.</div>
             </div>
 
-            <div class="row">
-                <div class="mb-3 col-md-6">
-                    <label for="price" class="form-label">Price</label>
-                    <input 
-                        name="listing[price]" 
-                        id="price"
-                        type="number"
-                        class="form-control"
-                        placeholder="0.00"
-                        min="0"
-                        step="0.01"
-                        required>
+            <div class="field">
+                <label for="image">Property Photo</label>
+                <label class="file-label" for="image">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span id="file-name">Click to upload an image (JPG, PNG — max 5MB)</span>
+                </label>
+                <input name="image" id="image" type="file" accept="image/*" required onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'Click to upload'">
+                <div class="err">Please upload a photo.</div>
+            </div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label for="price">Price / Night ($)</label>
+                    <input name="listing[price]" id="price" type="number" placeholder="0.00" min="0" step="0.01" required>
+                    <div class="err">Enter a valid price.</div>
                 </div>
-
-                <div class="mb-3 col-md-6">
-                    <label for="country" class="form-label">Country</label>
-                    <input 
-                        name="listing[country]" 
-                        id="country"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter country" 
-                        required>
+                <div class="field">
+                    <label for="country">Country</label>
+                    <input name="listing[country]" id="country" type="text" placeholder="e.g. India" required>
+                    <div class="err">Country is required.</div>
                 </div>
             </div>
 
-            <div class="mb-4">
-                <label for="location" class="form-label">Location</label>
-                <input 
-                    name="listing[location]" 
-                    id="location"
-                    type="text" 
-                    class="form-control" 
-                    placeholder="Enter city or address" 
-                    required>
+            <div class="field">
+                <label for="location">Location / Address</label>
+                <input name="listing[location]" id="location" type="text" placeholder="City, neighborhood, or full address" required>
+                <div class="err">Location is required.</div>
             </div>
 
-            <button type="submit" class="btn btn-ultimate btn-lg w-100">
-                Add Listing
-            </button>
+            <!-- SWIPE TO SUBMIT -->
+            <div class="swipe-wrap" id="swipeWrap">
+                <div class="swipe-track" id="swipeTrack">
+                    <div class="swipe-fill" id="swipeFill"></div>
+                    <div class="swipe-thumb" id="swipeThumb">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                    <span class="swipe-label" id="swipeLabel">Swipe to Add Listing →</span>
+                </div>
+            </div>
+
+            <!-- hidden real submit -->
+            <button type="submit" id="hiddenSubmit" style="display:none"></button>
         </form>
     </div>
 </div>
 
 <script>
-    (function() {
-        'use strict';
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
+(function () {
+    'use strict';
+
+    /* ── form validation ── */
+    const form = document.getElementById('listingForm');
+
+    /* ── swipe logic ── */
+    const track   = document.getElementById('swipeTrack');
+    const thumb   = document.getElementById('swipeThumb');
+    const fill    = document.getElementById('swipeFill');
+    const label   = document.getElementById('swipeLabel');
+
+    let dragging = false;
+    let startX   = 0;
+    let currentX = 0;
+
+    const THUMB_W   = 58;   // thumb diameter + margin
+    const THRESHOLD = 0.82; // 82% of track = success
+
+    function getTrackWidth() {
+        return track.offsetWidth;
+    }
+
+    function setPos(x) {
+        const max = getTrackWidth() - THUMB_W;
+        x = Math.max(0, Math.min(x, max));
+        currentX = x;
+        thumb.style.left = (x + 4) + 'px';
+        fill.style.width = (x + THUMB_W) + 'px';
+        // fade label as thumb advances
+        const ratio = x / max;
+        label.style.opacity = Math.max(0, 1 - ratio * 2);
+    }
+
+    function reset() {
+        dragging = false;
+        thumb.style.transition = 'left 0.35s cubic-bezier(.4,0,.2,1)';
+        fill.style.transition  = 'width 0.35s cubic-bezier(.4,0,.2,1)';
+        setPos(0);
+        label.style.opacity = 1;
+        setTimeout(() => {
+            thumb.style.transition = '';
+            fill.style.transition  = '';
+        }, 350);
+    }
+
+    function triggerSuccess() {
+        track.classList.add('success');
+        label.textContent = '✓ Adding your listing…';
+        label.style.opacity = 1;
+        // validate then submit
+        setTimeout(() => {
+            if (!form.checkValidity()) {
                 form.classList.add('was-validated');
-            }, false);
-        });
-    })();
+                track.classList.remove('success');
+                reset();
+                label.textContent = 'Swipe to Add Listing →';
+            } else {
+                document.getElementById('hiddenSubmit').click();
+            }
+        }, 500);
+    }
+
+    /* pointer events (works for mouse + touch) */
+    thumb.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        startX = e.clientX - currentX;
+        thumb.setPointerCapture(e.pointerId);
+        thumb.style.transition = '';
+        fill.style.transition  = '';
+        e.preventDefault();
+    });
+
+    thumb.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        setPos(e.clientX - startX);
+    });
+
+    thumb.addEventListener('pointerup', () => {
+        if (!dragging) return;
+        dragging = false;
+        const ratio = currentX / (getTrackWidth() - THUMB_W);
+        if (ratio >= THRESHOLD) {
+            triggerSuccess();
+        } else {
+            reset();
+        }
+    });
+
+    thumb.addEventListener('pointercancel', reset);
+})();
 </script>

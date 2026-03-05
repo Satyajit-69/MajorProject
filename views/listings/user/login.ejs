@@ -1,34 +1,304 @@
 <% layout('/layouts/boilerplate') -%>
 
-<div class="container mt-5 d-flex justify-content-center">
-    <div class="col-md-6" style="border: 3px solid #000; padding: 40px; background: #fff; box-shadow: 12px 12px 0px #d90429;">
-        
-        <div class="text-center mb-4">
-            <h1 style="font-family: 'Times New Roman', serif; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border-bottom: 5px solid #d90429; display: inline-block; color: #000;">
-                Login
-            </h1>
-        </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&display=swap');
 
-        <form action="/login" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label class="form-label" style="font-weight: bold; text-transform: uppercase; font-family: 'Times New Roman', serif; color: #000;">Username</label>
-                <input name="username" type="text" class="form-control" style="border: 2px solid #000; border-radius: 0; padding: 12px; font-family: serif;" required>
-            </div>
-            
-            <div class="mb-4">
-                <label class="form-label" style="font-weight: bold; text-transform: uppercase; font-family: 'Times New Roman', serif; color: #000;">Password</label>
-                <input name="password" type="password" class="form-control" style="border: 2px solid #000; border-radius: 0; padding: 12px; font-family: serif;" required>
-            </div>
+  .login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f0e8;
+    padding: 20px;
+  }
 
-            <button type="submit" class="btn w-100" style="background-color: #d90429; color: #fff; border: 2px solid #000; border-radius: 0; font-weight: bold; text-transform: uppercase; padding: 12px; transition: 0.3s;">
-                Log In
-            </button>
+  .login-card {
+    display: flex;
+    width: 100%;
+    max-width: 960px;
+    min-height: 580px;
+    border: 3px solid #000;
+    box-shadow: 10px 10px 0px #d90429;
+    background: #fff;
+    overflow: hidden;
+  }
 
-            <div class="text-center mt-4">
-                <a href="/signup" style="color: #000; text-decoration: none; font-weight: bold; border-bottom: 2px solid #d90429; font-family: 'Times New Roman', serif;">
-                    Create an account
-                </a>
-            </div>
-        </form>
+  /* ── LEFT ILLUSTRATION PANEL ── */
+  .login-left {
+    flex: 1;
+    background: #d90429;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+    position: relative;
+    overflow: hidden;
+    border-right: 3px solid #000;
+  }
+
+  /* decorative grid lines */
+  .login-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 40px);
+    pointer-events: none;
+  }
+
+  .login-left svg {
+    width: 260px;
+    max-width: 90%;
+    z-index: 1;
+    filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.3));
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-12px); }
+  }
+
+  .left-tagline {
+    z-index: 1;
+    margin-top: 28px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: #fff;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  }
+
+  .left-tagline span {
+    display: block;
+    font-size: 0.85rem;
+    font-family: 'DM Mono', monospace;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 8px;
+    opacity: 0.85;
+  }
+
+  /* decorative dots */
+  .dot-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+    z-index: 1;
+  }
+  .dot-row .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    border: 2px solid rgba(255,255,255,0.7);
+  }
+  .dot-row .dot.active { background: #fff; }
+
+  /* ── RIGHT FORM PANEL ── */
+  .login-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 52px 44px;
+    background: #fff;
+  }
+
+  .form-heading {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 2.6rem;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .form-subhead {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 36px;
+  }
+
+  .form-label-custom {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #000;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .input-custom {
+    width: 100%;
+    border: 2px solid #000;
+    border-radius: 0;
+    padding: 12px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    background: #f5f0e8;
+    outline: none;
+    transition: box-shadow 0.2s, background 0.2s;
+    margin-bottom: 22px;
+    display: block;
+  }
+
+  .input-custom:focus {
+    background: #fff;
+    box-shadow: 4px 4px 0px #d90429;
+  }
+
+  .btn-login {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 0;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    margin-top: 6px;
+  }
+
+  .btn-login:hover {
+    background: #d90429;
+    border-color: #d90429;
+    box-shadow: 4px 4px 0px #000;
+    transform: translate(-2px, -2px);
+  }
+
+  .btn-login:active {
+    transform: translate(0,0);
+    box-shadow: none;
+  }
+
+  .signup-link {
+    text-align: center;
+    margin-top: 28px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #888;
+  }
+
+  .signup-link a {
+    color: #000;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 2px solid #d90429;
+    padding-bottom: 1px;
+    transition: color 0.2s;
+  }
+
+  .signup-link a:hover { color: #d90429; }
+
+  /* responsive */
+  @media (max-width: 700px) {
+    .login-left { display: none; }
+    .login-right { padding: 40px 28px; }
+    .login-card { box-shadow: 6px 6px 0px #d90429; }
+  }
+</style>
+
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <!-- LEFT: Illustration -->
+    <div class="login-left">
+
+      <!-- SVG Illustration: person at laptop -->
+      <svg viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- desk -->
+        <rect x="20" y="148" width="180" height="8" rx="2" fill="#000"/>
+        <rect x="30" y="156" width="12" height="28" rx="2" fill="#000"/>
+        <rect x="178" y="156" width="12" height="28" rx="2" fill="#000"/>
+
+        <!-- laptop base -->
+        <rect x="55" y="118" width="110" height="32" rx="3" fill="#fff" stroke="#000" stroke-width="3"/>
+        <!-- laptop screen -->
+        <rect x="60" y="68" width="100" height="54" rx="3" fill="#fff" stroke="#000" stroke-width="3"/>
+        <!-- screen content lines -->
+        <rect x="70" y="78" width="50" height="5" rx="2" fill="#d90429"/>
+        <rect x="70" y="89" width="70" height="4" rx="2" fill="#ddd"/>
+        <rect x="70" y="99" width="55" height="4" rx="2" fill="#ddd"/>
+        <!-- keyboard dots -->
+        <rect x="68" y="128" width="84" height="6" rx="2" fill="#eee" stroke="#000" stroke-width="1.5"/>
+
+        <!-- person body -->
+        <rect x="88" y="40" width="44" height="32" rx="6" fill="#fff" stroke="#000" stroke-width="3"/>
+        <!-- head -->
+        <circle cx="110" cy="28" r="16" fill="#fff" stroke="#000" stroke-width="3"/>
+        <!-- eyes -->
+        <circle cx="104" cy="26" r="2.5" fill="#000"/>
+        <circle cx="116" cy="26" r="2.5" fill="#000"/>
+        <!-- smile -->
+        <path d="M104 33 Q110 38 116 33" stroke="#000" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- hair -->
+        <path d="M94 20 Q110 10 126 20" stroke="#000" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+        <!-- arms -->
+        <line x1="88" y1="52" x2="72" y2="70" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="132" y1="52" x2="148" y2="70" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- coffee cup -->
+        <rect x="162" y="128" width="22" height="20" rx="3" fill="#fff" stroke="#000" stroke-width="2.5"/>
+        <path d="M184 135 Q192 135 192 142 Q192 148 184 148" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <rect x="166" y="124" width="14" height="5" rx="2" fill="#d90429"/>
+
+        <!-- floating stars -->
+        <text x="16" y="55" font-size="16" fill="rgba(255,255,255,0.6)">★</text>
+        <text x="192" y="72" font-size="12" fill="rgba(255,255,255,0.5)">✦</text>
+        <text x="30" y="105" font-size="10" fill="rgba(255,255,255,0.4)">◆</text>
+      </svg>
+
+      <div class="left-tagline">
+        Welcome Back!
+        <span>Your space awaits</span>
+      </div>
+
+      <div class="dot-row">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
     </div>
+
+    <!-- RIGHT: Form -->
+    <div class="login-right">
+      <div class="form-heading">Login</div>
+      <div class="form-subhead">Sign in to continue</div>
+
+      <form action="/login" method="POST" class="needs-validation" novalidate>
+        <label class="form-label-custom" for="username">Username</label>
+        <input id="username" name="username" type="text" class="input-custom" placeholder="your_username" required>
+
+        <label class="form-label-custom" for="password">Password</label>
+        <input id="password" name="password" type="password" class="input-custom" placeholder="••••••••" required>
+
+        <button type="submit" class="btn-login">Log In →</button>
+
+        <div class="signup-link">
+          New here? <a href="/signup">Create an account</a>
+        </div>
+      </form>
+    </div>
+
+  </div>
 </div>

@@ -328,12 +328,17 @@
         <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
       </div>
       <div class="nav-collapse" id="authMenu">
-        <a href="/signup">Sign up</a>
-        <a href="/login">Log in</a>
-        <hr style="margin: 0.4rem 0; border-color: var(--border);">
-        <a href="/listings/new">Become a host</a>
-        <a href="/listings">Explore stays</a>
+        <% if(!currUser){ %>
+  <a href="/signup">Sign up</a>
+  <a href="/login">Log in</a>
+<% } else { %>
+  <a href="/logout">Log out</a>
+<% } %>
+
+    <a href="/listings">Explore Stays</a>
       </div>
+
+
 
       <button class="nav-toggler" id="mobileToggler">
         <i class="fa-solid fa-bars"></i>

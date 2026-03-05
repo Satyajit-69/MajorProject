@@ -109,19 +109,16 @@ body {
   animation: fadeUp 0.7s ease 0.15s both;
 }
 .listing-hero img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   display: block;
   transition: transform 0.6s ease;
 }
 .listing-hero:hover img { transform: scale(1.02); }
 
-/* price badge on image */
 .price-badge {
   position: absolute;
-  bottom: 1.25rem;
-  right: 1.25rem;
+  bottom: 1.25rem; right: 1.25rem;
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border);
@@ -152,9 +149,7 @@ body {
 }
 
 /* ── LEFT: DETAILS ── */
-.listing-details {
-  flex: 1;
-}
+.listing-details { flex: 1; }
 
 .detail-section {
   margin-bottom: 2.5rem;
@@ -185,7 +180,6 @@ body {
   font-weight: 300;
 }
 
-/* info pills row */
 .info-pills {
   display: flex;
   gap: 0.75rem;
@@ -206,19 +200,131 @@ body {
 }
 .info-pill i { color: var(--red); font-size: 0.8rem; }
 
-/* ── MAP ── */
-#map {
-  height: 220px;
-  border-radius: 1rem;
+/* ─── UPGRADED MAP ─── */
+.map-container {
+  position: relative;
+  margin-top: 1rem;
+  border-radius: 1.25rem;
   overflow: hidden;
   border: 1px solid var(--border);
-  margin-top: 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: box-shadow 0.3s;
 }
 
-/* ── RIGHT SIDEBAR: OWNER ACTIONS ── */
-.listing-sidebar {
-  flex: 0 0 280px;
+.map-container:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.13);
 }
+
+#map {
+  height: 320px;
+  width: 100%;
+  transition: height 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+
+.map-container.expanded #map {
+  height: 460px;
+}
+
+/* Custom Leaflet tile style override */
+.leaflet-tile-pane { filter: saturate(0.85) brightness(1.02); }
+
+/* location overlay pill */
+.map-location-pill {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 3rem;
+  padding: 0.6rem 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  white-space: nowrap;
+  z-index: 1000;
+  animation: pillSlideUp 0.5s ease 0.4s both;
+  pointer-events: none;
+}
+.map-location-pill i { color: var(--red); font-size: 0.8rem; }
+.map-location-pill .pill-country {
+  color: var(--muted);
+  font-weight: 400;
+  padding-left: 0.35rem;
+  border-left: 1px solid var(--border);
+  margin-left: 0.2rem;
+}
+
+/* expand / collapse toggle */
+.map-toggle-btn {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  padding: 0.4rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--muted);
+  z-index: 1000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  letter-spacing: 0.03em;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  pointer-events: all;
+}
+.map-toggle-btn:hover { color: var(--red); border-color: rgba(208,37,26,0.3); background: white; }
+.map-toggle-btn i { font-size: 0.7rem; transition: transform 0.3s; }
+.map-container.expanded .map-toggle-btn i { transform: rotate(180deg); }
+
+/* loading state */
+.map-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  z-index: 500;
+  transition: opacity 0.4s;
+}
+.map-loading.hidden { opacity: 0; pointer-events: none; }
+.map-spinner {
+  width: 28px; height: 28px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* custom marker pulse */
+@keyframes markerPulse {
+  0%   { transform: scale(1); opacity: 0.6; }
+  70%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes pillSlideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(14px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── RIGHT SIDEBAR ── */
+.listing-sidebar { flex: 0 0 280px; }
 
 .action-card {
   background: var(--bg-soft);
@@ -242,267 +348,140 @@ body {
   margin-bottom: 1.5rem;
   line-height: 1.5;
 }
-.action-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 1.25rem 0;
-}
+.action-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
 
 .btn-action-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   width: 100%;
-  background: var(--red);
-  color: white;
-  border: none;
-  padding: 0.85rem;
-  border-radius: 0.85rem;
-  font-family: var(--sans);
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
+  background: var(--red); color: white; border: none;
+  padding: 0.85rem; border-radius: 0.85rem;
+  font-family: var(--sans); font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; text-decoration: none;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 16px rgba(208,37,26,0.25);
   margin-bottom: 0.75rem;
 }
 .btn-action-primary:hover {
-  background: var(--red-deep);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(208,37,26,0.35);
-  color: white;
-  text-decoration: none;
+  background: var(--red-deep); transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(208,37,26,0.35); color: white; text-decoration: none;
 }
 .btn-action-ghost {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   width: 100%;
-  background: transparent;
-  color: var(--ink);
-  border: 1.5px solid var(--border);
-  padding: 0.82rem;
-  border-radius: 0.85rem;
-  font-family: var(--sans);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
+  background: transparent; color: var(--ink); border: 1.5px solid var(--border);
+  padding: 0.82rem; border-radius: 0.85rem;
+  font-family: var(--sans); font-size: 0.82rem; font-weight: 500;
+  cursor: pointer; text-decoration: none;
   transition: border-color 0.2s, background 0.2s;
 }
-.btn-action-ghost:hover {
-  border-color: var(--red);
-  background: var(--red-soft);
-  color: var(--red);
-  text-decoration: none;
-}
+.btn-action-ghost:hover { border-color: var(--red); background: var(--red-soft); color: var(--red); text-decoration: none; }
 .btn-danger-ghost {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   width: 100%;
-  background: transparent;
-  color: var(--red);
-  border: 1.5px solid rgba(208,37,26,0.25);
-  padding: 0.82rem;
-  border-radius: 0.85rem;
-  font-family: var(--sans);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
+  background: transparent; color: var(--red); border: 1.5px solid rgba(208,37,26,0.25);
+  padding: 0.82rem; border-radius: 0.85rem;
+  font-family: var(--sans); font-size: 0.82rem; font-weight: 500;
+  cursor: pointer; text-decoration: none;
   transition: border-color 0.2s, background 0.2s;
   margin-top: 0.75rem;
 }
 .btn-danger-ghost:hover { background: var(--red-soft); border-color: var(--red); }
 
-/* ── REVIEWS SECTION ── */
-.reviews-section {
-  margin-top: 3.5rem;
-  padding-top: 3rem;
-  border-top: 1px solid var(--border);
-}
-.reviews-header {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-.reviews-title {
-  font-family: var(--serif);
-  font-size: 1.8rem;
-  font-weight: 300;
-  color: var(--ink);
-}
-.reviews-count {
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-weight: 500;
-}
+/* ── REVIEWS ── */
+.reviews-section { margin-top: 3.5rem; padding-top: 3rem; border-top: 1px solid var(--border); }
+.reviews-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.reviews-title { font-family: var(--serif); font-size: 1.8rem; font-weight: 300; color: var(--ink); }
+.reviews-count { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
 
-/* Review Form */
 .review-form-card {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.75rem;
-  margin-bottom: 2.5rem;
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.75rem; margin-bottom: 2.5rem;
 }
-.review-form-title {
-  font-family: var(--serif);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 1.25rem;
-}
+.review-form-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 1.25rem; }
 
-/* Star rating override */
-.star-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-}
-.star-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
+.star-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem; }
+.star-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .starability-growRotate { margin: 0; }
 
-/* Textarea */
 .review-textarea {
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 0.85rem;
-  padding: 0.85rem 1rem;
-  font-family: var(--sans);
-  font-size: 0.85rem;
-  color: var(--ink);
-  background: var(--bg);
-  resize: vertical;
-  min-height: 100px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
+  width: 100%; border: 1px solid var(--border); border-radius: 0.85rem;
+  padding: 0.85rem 1rem; font-family: var(--sans); font-size: 0.85rem;
+  color: var(--ink); background: var(--bg); resize: vertical; min-height: 100px;
+  transition: border-color 0.2s, box-shadow 0.2s; outline: none;
 }
-.review-textarea:focus {
-  border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(208,37,26,0.08);
-}
+.review-textarea:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(208,37,26,0.08); }
 .review-textarea::placeholder { color: #ccc; }
 .field-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.5rem;
+  display: block; font-size: 0.72rem; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
 }
 .invalid-feedback { font-size: 0.72rem; color: var(--red); margin-top: 0.3rem; }
 
 .btn-submit-review {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--red);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.75rem;
-  border-radius: 3rem;
-  font-family: var(--sans);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--red); color: white; border: none;
+  padding: 0.75rem 1.75rem; border-radius: 3rem;
+  font-family: var(--sans); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; margin-top: 1rem;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 16px rgba(208,37,26,0.25);
 }
 .btn-submit-review:hover { background: var(--red-deep); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(208,37,26,0.35); }
 
-/* Review Cards */
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
+.reviews-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
 .review-card {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  padding: 1.4rem;
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: 1rem; padding: 1.4rem;
   transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
-.review-card:hover {
-  border-color: rgba(208,37,26,0.18);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.06);
-}
-.review-author {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.85rem;
-}
+.review-card:hover { border-color: rgba(208,37,26,0.18); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.06); }
+.review-author { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem; }
 .review-avatar {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: var(--red-soft);
-  border: 1px solid rgba(208,37,26,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  color: var(--red);
-  font-weight: 700;
-  flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--red-soft); border: 1px solid rgba(208,37,26,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; color: var(--red); font-weight: 700; flex-shrink: 0;
 }
-.review-username {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--ink);
-}
+.review-username { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
 .review-comment {
-  font-size: 0.83rem;
-  color: var(--muted);
-  line-height: 1.65;
-  font-weight: 300;
-  margin-bottom: 0.85rem;
-  font-family: var(--serif);
-  font-style: italic;
+  font-size: 0.83rem; color: var(--muted); line-height: 1.65;
+  font-weight: 300; margin-bottom: 0.85rem;
+  font-family: var(--serif); font-style: italic;
 }
-.review-rating-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.rating-stars {
-  color: var(--red);
-  font-size: 0.75rem;
-  letter-spacing: 1px;
-}
+.review-rating-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+.rating-stars { color: var(--red); font-size: 0.75rem; letter-spacing: 1px; }
 .btn-delete-review {
-  background: transparent;
-  border: 1px solid rgba(208,37,26,0.2);
-  color: var(--red);
-  border-radius: 2rem;
-  padding: 0.28rem 0.75rem;
-  font-family: var(--sans);
-  font-size: 0.65rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
+  background: transparent; border: 1px solid rgba(208,37,26,0.2);
+  color: var(--red); border-radius: 2rem; padding: 0.28rem 0.75rem;
+  font-family: var(--sans); font-size: 0.65rem; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
 }
 .btn-delete-review:hover { background: var(--red-soft); border-color: var(--red); }
+
+.btn-gmaps {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--border);
+  border-radius: 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-gmaps:hover {
+  border-color: var(--red);
+  background: var(--red-soft);
+  color: var(--red);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(208,37,26,0.12);
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 860px) {
@@ -534,11 +513,8 @@ body {
 
   <!-- HERO IMAGE -->
   <div class="listing-hero">
-    <img
-      src="<%= listing.image?.url || '/default.avif' %>"
-      alt="<%= listing.title %>"
-      onerror="this.onerror=null; this.src='/default.avif';"
-    />
+    <img src="<%= listing.image?.url || '/default.avif' %>" alt="<%= listing.title %>"
+         onerror="this.onerror=null; this.src='/default.avif';" />
     <div class="price-badge">
       <div class="price-num">&#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></div>
       <div class="price-unit">per night</div>
@@ -556,7 +532,6 @@ body {
         <div class="section-label">About this stay</div>
         <h2 class="section-title">What to expect</h2>
         <p class="listing-description"><%= listing.description || "No description provided for this listing." %></p>
-
         <div class="info-pills">
           <div class="info-pill"><i class="fa-solid fa-location-dot"></i> <%= listing.location || "Location N/A" %></div>
           <div class="info-pill"><i class="fa-solid fa-earth-asia"></i> <%= listing.country || "Country N/A" %></div>
@@ -568,7 +543,38 @@ body {
       <div class="detail-section">
         <div class="section-label">Location</div>
         <h2 class="section-title">Where you'll be</h2>
-        <div id="map"></div>
+
+        <div class="map-container" id="mapContainer">
+          <!-- loading spinner -->
+          <div class="map-loading" id="mapLoading">
+            <div class="map-spinner"></div>
+          </div>
+
+          <!-- map canvas -->
+          <div id="map"></div>
+
+          <!-- expand/collapse button -->
+          <button class="map-toggle-btn" id="mapToggle" type="button">
+            <i class="fa-solid fa-chevron-down"></i>
+            <span id="mapToggleLabel">Expand</span>
+          </button>
+
+          <!-- location pill -->
+          <div class="map-location-pill" id="mapPill" style="display:none;">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="mapPillCity"><%= listing.location || "" %></span>
+            <span class="pill-country"><%= listing.country || "" %></span>
+          </div>
+        </div>
+
+        <!-- Google Maps Button -->
+        <a id="googleMapsBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn-gmaps">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#d0251a"/>
+          </svg>
+          Get Directions in Google Maps
+          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.62rem; opacity:0.55;"></i>
+        </a>
       </div>
 
     </div>
@@ -610,42 +616,27 @@ body {
       <span class="reviews-count"><%= listing.reviews.length %> review<%= listing.reviews.length !== 1 ? 's' : '' %></span>
     </div>
 
-    <!-- Review Form -->
     <% if (currUser) { %>
     <div class="review-form-card">
       <div class="review-form-title">Share your experience</div>
       <form action="/listings/<%= listing.id %>/reviews" method="POST" class="needs-validation" novalidate>
-
         <div class="star-row">
           <span class="star-label">Rating</span>
           <fieldset class="starability-growRotate" style="border:none; padding:0;">
             <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
-            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-            <label for="first-rate1" title="Terrible">1 star</label>
-            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-            <label for="first-rate2" title="Not good">2 stars</label>
-            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-            <label for="first-rate3" title="Average">3 stars</label>
-            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-            <label for="first-rate4" title="Very good">4 stars</label>
-            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-            <label for="first-rate5" title="Amazing">5 stars</label>
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" /><label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" /><label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" /><label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" /><label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" /><label for="first-rate5" title="Amazing">5 stars</label>
           </fieldset>
         </div>
-
         <div style="margin-bottom:0.5rem;">
           <label class="field-label" for="comment">Your comment</label>
-          <textarea
-            name="review[comment]"
-            id="comment"
-            class="review-textarea"
-            rows="4"
-            placeholder="Tell others what made your stay special..."
-            required
-          ></textarea>
+          <textarea name="review[comment]" id="comment" class="review-textarea" rows="4"
+            placeholder="Tell others what made your stay special..." required></textarea>
           <div class="invalid-feedback">Please enter some valid comments.</div>
         </div>
-
         <button type="submit" class="btn-submit-review">
           <i class="fa-solid fa-paper-plane"></i> Post Review
         </button>
@@ -653,16 +644,13 @@ body {
     </div>
     <% } %>
 
-    <!-- Reviews Grid -->
     <% if (listing.reviews.length > 0) { %>
     <div class="reviews-grid">
       <% for (let review of listing.reviews) { %>
       <div class="review-card">
         <div class="review-author">
           <div class="review-avatar"><%= review.author.username[0].toUpperCase() %></div>
-          <div>
-            <div class="review-username">@<%= review.author.username %></div>
-          </div>
+          <div><div class="review-username">@<%= review.author.username %></div></div>
         </div>
         <p class="review-comment">"<%= review.comment %>"</p>
         <div class="review-rating-row">
@@ -674,9 +662,7 @@ body {
           </div>
           <% if (currUser && currUser._id.equals(review.author._id)) { %>
           <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-            <button type="submit" class="btn-delete-review">
-              <i class="fa-solid fa-trash"></i> Delete
-            </button>
+            <button type="submit" class="btn-delete-review"><i class="fa-solid fa-trash"></i> Delete</button>
           </form>
           <% } %>
         </div>
@@ -689,8 +675,7 @@ body {
       No reviews yet. Be the first to share your experience!
     </div>
     <% } %>
-
-  </div><!-- /reviews-section -->
+  </div>
 
 </div><!-- /listing-page -->
 
@@ -706,35 +691,171 @@ body {
   });
 })();
 
-/* Leaflet Map */
-const map = L.map('map', { zoomControl: true, scrollWheelZoom: false });
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors'
-}).addTo(map);
+/* ── UPGRADED MAP ── */
+(function() {
+  const mapContainer   = document.getElementById('mapContainer');
+  const mapLoading     = document.getElementById('mapLoading');
+  const mapPill        = document.getElementById('mapPill');
+  const mapToggle      = document.getElementById('mapToggle');
+  const mapToggleLabel = document.getElementById('mapToggleLabel');
 
-const location = "<%= listing.location || '' %>, <%= listing.country || '' %>";
-if (location.trim() !== ',') {
-  fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=1`)
-    .then(r => r.json())
-    .then(data => {
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat);
-        const lon = parseFloat(data[0].lon);
-        map.setView([lat, lon], 13);
-        const redIcon = L.divIcon({
-          html: `<div style="width:14px;height:14px;background:var(--red, #d0251a);border-radius:50%;border:2.5px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
-          className: '',
-          iconSize: [14, 14],
-          iconAnchor: [7, 7]
-        });
-        L.marker([lat, lon], { icon: redIcon }).addTo(map)
-          .bindPopup(`<b style="font-family:Geist,sans-serif;font-size:0.8rem;">${location}</b>`);
-      } else {
-        map.setView([20.5937, 78.9629], 4);
-      }
-    })
-    .catch(() => map.setView([20.5937, 78.9629], 4));
-} else {
-  map.setView([20.5937, 78.9629], 4);
-}
+  // ── Default: India center (fallback if geocoding fails)
+  const DEFAULT_LAT  = 20.5937;
+  const DEFAULT_LNG  = 78.9629;
+  const DEFAULT_ZOOM = 4;
+
+  const map = L.map('map', {
+    zoomControl: false,
+    scrollWheelZoom: false,
+    attributionControl: false,
+    // Start at default immediately — no blank flash
+    center: [DEFAULT_LAT, DEFAULT_LNG],
+    zoom: DEFAULT_ZOOM,
+  });
+
+  // ── Stadia Alidade Smooth — warm, muted, beautiful tone
+  // No API key needed, completely free for OSM-based use
+  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20,
+    attribution: '© <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> © <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+  }).addTo(map);
+
+  // Custom zoom — bottom right, clean
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  // Minimal attribution bottom-left
+  L.control.attribution({ position: 'bottomleft', prefix: false }).addTo(map);
+
+  // ── Custom popup styles + pulse keyframe
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .custom-popup .leaflet-popup-content-wrapper {
+      border-radius: 0.85rem;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+      border: 1px solid #e8e4e0;
+      padding: 0;
+    }
+    .custom-popup .leaflet-popup-content { margin: 10px 14px; }
+    .custom-popup .leaflet-popup-tip-container { display: none; }
+    .leaflet-control-zoom a {
+      border-radius: 0.5rem !important;
+      font-family: Geist, sans-serif !important;
+      color: #111 !important;
+    }
+    .leaflet-control-zoom { border: 1px solid #e8e4e0 !important; border-radius: 0.6rem !important; overflow:hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important; }
+    @keyframes markerPulse {
+      0%   { transform: scale(1); opacity: 0.55; }
+      70%  { transform: scale(2.6); opacity: 0; }
+      100% { transform: scale(2.6); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(styleEl);
+
+  // ── Marker factory
+  function placeMarker(lat, lng, title, locationStr) {
+    const markerHtml = `
+      <div style="position:relative;width:22px;height:22px;">
+        <div style="
+          position:absolute;inset:0;
+          background:#d0251a;border-radius:50%;
+          border:3px solid white;
+          box-shadow:0 3px 14px rgba(208,37,26,0.6);
+          z-index:2;
+        "></div>
+        <div style="
+          position:absolute;inset:-5px;
+          background:rgba(208,37,26,0.28);border-radius:50%;
+          animation:markerPulse 2.2s ease-out infinite;
+          z-index:1;
+        "></div>
+      </div>`;
+
+    const icon = L.divIcon({
+      html: markerHtml,
+      className: '',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+    });
+
+    L.marker([lat, lng], { icon })
+      .addTo(map)
+      .bindPopup(`
+        <div style="font-family:Geist,sans-serif;padding:3px 4px;">
+          <div style="font-weight:600;font-size:0.82rem;color:#111;margin-bottom:3px;">${title}</div>
+          <div style="font-size:0.72rem;color:#888;display:flex;align-items:center;gap:4px;">
+            <span style="color:#d0251a;">●</span> ${locationStr}
+          </div>
+        </div>`, {
+        closeButton: false,
+        className: 'custom-popup',
+      });
+
+    // Dashed radius circle
+    L.circle([lat, lng], {
+      radius: 900,
+      color: '#d0251a',
+      fillColor: '#d0251a',
+      fillOpacity: 0.04,
+      weight: 1.5,
+      opacity: 0.25,
+      dashArray: '6 5',
+    }).addTo(map);
+  }
+
+  // ── Geocode & set view
+  // ── Use saved coordinates from listing.geometry if available
+  const savedLat = <%= (listing.geometry && listing.geometry.coordinates) ? listing.geometry.coordinates[1] : 'null' %>;
+  const savedLng = <%= (listing.geometry && listing.geometry.coordinates) ? listing.geometry.coordinates[0] : 'null' %>;
+  const locationStr = "<%= listing.location || '' %>, <%= listing.country || '' %>".trim();
+
+  // ── Build Google Maps URL (directions to destination)
+  function setGoogleMapsLink(lat, lng, label) {
+    const dest = lat && lng ? `${lat},${lng}` : encodeURIComponent(label);
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=driving`;
+    document.getElementById('googleMapsBtn').href = url;
+  }
+
+  function hideLoader() {
+    mapLoading.classList.add('hidden');
+    setTimeout(() => { mapLoading.style.display = 'none'; }, 400);
+  }
+
+  if (savedLat && savedLng) {
+    // ── Fast path: use coordinates already stored in listing.geometry
+    hideLoader();
+    map.flyTo([savedLat, savedLng], 13, { duration: 1.4, easeLinearity: 0.3 });
+    placeMarker(savedLat, savedLng, "<%= listing.title %>", locationStr);
+    setGoogleMapsLink(savedLat, savedLng, locationStr);
+    mapPill.style.display = 'flex';
+
+  } else if (locationStr && locationStr !== ',') {
+    // ── Fallback: geocode from location string
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationStr)}&format=json&limit=1`)
+      .then(r => r.json())
+      .then(data => {
+        hideLoader();
+        if (data && data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lng = parseFloat(data[0].lon);
+          map.flyTo([lat, lng], 13, { duration: 1.4, easeLinearity: 0.3 });
+          placeMarker(lat, lng, "<%= listing.title %>", locationStr);
+          setGoogleMapsLink(lat, lng, locationStr);
+          mapPill.style.display = 'flex';
+        }
+        // else stays at default India view
+      })
+      .catch(() => hideLoader());
+  } else {
+    // ── No location at all — show default India map, Google Maps link uses text
+    hideLoader();
+    setGoogleMapsLink(null, null, locationStr);
+  }
+
+  // ── Expand / Collapse toggle
+  mapToggle.addEventListener('click', () => {
+    const expanded = mapContainer.classList.toggle('expanded');
+    mapToggleLabel.textContent = expanded ? 'Collapse' : 'Expand';
+    setTimeout(() => map.invalidateSize({ animate: true }), 460);
+  });
+})();
 </script>

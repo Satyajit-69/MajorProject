@@ -1,6 +1,30 @@
 const Listing = require("../models/listing.js");
 const ExpressError = require("../utils/ExpressError");
 const { cloudinary } = require("../cloudConfig.js");
+const fetch = require("node-fetch");
+// ── Nominatim geocode helper (free, no API key)
+async function geocode(location, country) {
+  try {
+    const query = `${location}, ${country}`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+
+    const res = await fetch(url, {
+      headers: {
+        // Required by Nominatim — replace with your app name & email
+        "User-Agent": "WanderlustApp/1.0 (your@email.com)",
+      },
+    });
+
+    const data = await res.json();
+
+    if (data && data.length > 0) {
+      return [parseFloat(data[0].lon), parseFloat(data[0].lat)]; // GeoJSON: [lng, lat]
+    }
+  } catch (err) {
+    console.error("Geocoding error:", err.message);
+  }
+  return null; // never crash the request if geocoding fails
+}
 
 // ---------------- INDEX ROUTE ----------------
 module.exports.index = async (req, res) => {
@@ -17,8 +41,6 @@ module.exports.new = (req, res) => {
 module.exports.createListing = async (req, res) => {
   let uploadedImage = null;
 
-
-
   try {
     if (!req.body.listing) {
       req.flash("error", "Listing data is required");
@@ -34,13 +56,21 @@ module.exports.createListing = async (req, res) => {
         url: req.file.path,
         filename: req.file.filename,
       };
-
       newListing.image = uploadedImage;
     } else {
       newListing.image = {
         url: "/default.avif",
         filename: "default.avif",
       };
+    }
+
+    // ── Geocode location → save coordinates
+    const coords = await geocode(newListing.location, newListing.country);
+    if (coords) {
+      newListing.geometry = { type: "Point", coordinates: coords };
+      console.log(`Geocoded: ${newListing.location} → [${coords}]`);
+    } else {
+      console.warn(`Geocoding failed for: ${newListing.location}, ${newListing.country}`);
     }
 
     await newListing.save();
@@ -110,6 +140,10 @@ module.exports.updateRoute = async (req, res) => {
 
     const oldImage = listing.image;
 
+    // Track if location changed before overwriting
+    const oldLocation = listing.location;
+    const oldCountry  = listing.country;
+
     Object.assign(listing, req.body.listing);
 
     // If new image uploaded
@@ -126,6 +160,23 @@ module.exports.updateRoute = async (req, res) => {
         } catch (deleteErr) {
           console.error("Error deleting old image:", deleteErr);
         }
+      }
+    }
+
+    // ── Re-geocode if location/country changed OR coordinates missing
+    const locationChanged =
+      listing.location !== oldLocation || listing.country !== oldCountry;
+
+    const missingCoords =
+      !listing.geometry ||
+      !listing.geometry.coordinates ||
+      listing.geometry.coordinates.length === 0;
+
+    if (locationChanged || missingCoords) {
+      const coords = await geocode(listing.location, listing.country);
+      if (coords) {
+        listing.geometry = { type: "Point", coordinates: coords };
+        console.log(`Re-geocoded: ${listing.location} → [${coords}]`);
       }
     }
 

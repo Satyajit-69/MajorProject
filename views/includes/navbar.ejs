@@ -13,15 +13,16 @@
       --muted: #717171;
       --border: #dddddd;
       --bg: #ffffff;
-      --accent: #3d7a4f;       /* earthy green */
-      --accent2: #c8a96e;      /* warm sand */
+      --accent: #3d7a4f;
+      --accent2: #c8a96e;
       --hover-bg: #f4f6f2;
       --radius: 2rem;
       --font: 'Plus Jakarta Sans', sans-serif;
+      --drawer-w: 300px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font); background: #f0ede8; }
+    body { font-family: var(--font); background: #f0ede8; min-height: 100vh; }
 
     /* ── NAVBAR ── */
     .main-navbar {
@@ -32,7 +33,6 @@
       top: 0;
       z-index: 999;
     }
-
     .navbar-inner {
       display: flex;
       align-items: center;
@@ -45,26 +45,14 @@
 
     /* ── LOGO ── */
     .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1.15rem;
-      letter-spacing: -0.03em;
-      white-space: nowrap;
-      flex-shrink: 0;
+      display: flex; align-items: center; gap: 0.45rem;
+      text-decoration: none; font-weight: 700; font-size: 1.15rem;
+      letter-spacing: -0.03em; white-space: nowrap; flex-shrink: 0;
     }
-    /* Leaf icon in a small circle */
     .logo-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       background: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .logo-icon i { color: #fff; font-size: 0.85rem; }
     .logo-text { color: var(--ink); }
@@ -72,205 +60,67 @@
 
     /* ── SEARCH BAR ── */
     .search-bar {
-      display: flex;
-      align-items: stretch;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-      transition: box-shadow 0.2s;
-      background: var(--bg);
-      flex: 1;
-      max-width: 600px;
+      display: flex; align-items: stretch;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      transition: box-shadow 0.2s; background: var(--bg);
+      flex: 1; max-width: 600px;
     }
     .search-bar:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.12); }
 
-    .search-seg {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 0.55rem 1.15rem;
-      cursor: pointer;
-      transition: background 0.15s;
-      border-right: 1px solid var(--border);
-      min-width: 0;
-      flex: 1;
-    }
-    .search-seg:last-of-type { border-right: none; }
-    .search-seg:hover { background: var(--hover-bg); }
+   
 
-    .search-seg h6 {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0 0 1px;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-    .search-seg small {
-      font-size: 0.7rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    /* Category chips row inside search */
-    .search-chips {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0 0.75rem;
-      border-right: 1px solid var(--border);
-    }
-    .chip {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      background: var(--hover-bg);
-      border: 1px solid var(--border);
-      border-radius: 2rem;
-      padding: 0.3rem 0.65rem;
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--ink);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .chip:hover { background: #e8ede4; border-color: var(--accent); }
-    .chip.active { background: #e8ede4; border-color: var(--accent); color: var(--accent); }
-    .chip i { font-size: 0.65rem; }
 
     .search-btn {
-      background: var(--accent);
-      border: none;
-      padding: 0 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      transition: background 0.18s;
-      flex-shrink: 0;
+      background: var(--accent); border: none; padding: 0 1.2rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 0.45rem; transition: background 0.18s; flex-shrink: 0;
     }
     .search-btn:hover { background: #30663f; }
     .search-btn i { color: white; font-size: 0.85rem; }
     .search-btn span {
-      color: white;
-      font-family: var(--font);
-      font-size: 0.78rem;
-      font-weight: 600;
+      color: white; font-family: var(--font);
+      font-size: 0.78rem; font-weight: 600;
     }
 
     /* ── RIGHT SIDE ── */
     .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      flex-shrink: 0;
+      display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0;
     }
-
     .nav-text-link {
-      text-decoration: none;
-      color: var(--ink);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 0.45rem 0.75rem;
-      border-radius: 1.5rem;
-      transition: background 0.15s;
-      white-space: nowrap;
+      text-decoration: none; color: var(--ink); font-size: 0.78rem;
+      font-weight: 600; padding: 0.45rem 0.75rem; border-radius: 1.5rem;
+      transition: background 0.15s; white-space: nowrap;
     }
     .nav-text-link:hover { background: var(--hover-bg); }
-
-    .nav-icon-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      color: var(--ink);
-      text-decoration: none;
-      transition: background 0.15s;
-      font-size: 0.9rem;
-    }
-    .nav-icon-link:hover { background: var(--hover-bg); }
-
-    .nav-divider {
-      width: 1px; height: 20px;
-      background: var(--border);
-      margin: 0 0.25rem;
-    }
+    .nav-divider { width: 1px; height: 20px; background: var(--border); margin: 0 0.25rem; }
 
     .auth-group {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      border: 1px solid var(--border);
-      border-radius: 1.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+      border: 1px solid var(--border); border-radius: 1.5rem;
       padding: 0.3rem 0.4rem 0.3rem 0.75rem;
-      cursor: pointer;
-      transition: box-shadow 0.15s;
-      background: var(--bg);
+      cursor: pointer; transition: box-shadow 0.15s; background: var(--bg);
     }
     .auth-group:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
     .auth-group i.fa-bars { font-size: 0.8rem; color: var(--ink); }
     .auth-group .user-avatar {
-      width: 30px; height: 30px;
-      border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%;
       background: var(--accent);
       display: flex; align-items: center; justify-content: center;
       color: white; font-size: 0.75rem;
     }
 
-    /* Collapse panel */
-    .nav-collapse {
-      display: none;
-      position: absolute;
-      top: calc(100% + 0.5rem);
-      right: 1rem;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-      padding: 0.75rem;
-      z-index: 998;
-      min-width: 180px;
-    }
-    .nav-collapse.open { display: block; }
-    .nav-collapse a {
-      display: block;
-      padding: 0.6rem 0.75rem;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--ink);
-      text-decoration: none;
-      border-radius: 0.5rem;
-      transition: background 0.15s;
-    }
-    .nav-collapse a:hover { background: var(--hover-bg); }
-
-    /* Mobile */
+    /* Mobile toggler */
     .nav-toggler {
-      display: none;
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 0.35rem 0.6rem;
-      cursor: pointer;
-      color: var(--ink);
-      font-size: 1rem;
+      display: none; background: none; border: 1px solid var(--border);
+      border-radius: 0.5rem; padding: 0.35rem 0.6rem;
+      cursor: pointer; color: var(--ink); font-size: 1rem;
     }
     .search-bar-mobile {
-      display: none;
-      width: 100%;
-      margin-top: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 0.85rem;
-      background: var(--hover-bg);
-      padding: 0.65rem 1rem;
-      align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
+      display: none; width: 100%; margin-top: 0.75rem;
+      border: 1px solid var(--border); border-radius: 0.85rem;
+      background: var(--hover-bg); padding: 0.65rem 1rem;
+      align-items: center; gap: 0.6rem; cursor: pointer;
       box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
     .search-bar-mobile i { color: var(--muted); font-size: 0.85rem; }
@@ -283,62 +133,239 @@
       .nav-toggler { display: block; }
       .main-navbar { position: relative; }
     }
-    @media (max-width: 480px) {
-      .logo-text { display: none; }
+    @media (max-width: 480px) { .logo-text { display: none; } }
+
+    /* ═══════════════════════════════════
+       BACKDROP OVERLAY
+    ═══════════════════════════════════ */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(252, 252, 252, 0);
+      z-index: 1000;
+      pointer-events: none;
+      transition: background 0.4s ease;
     }
+    .drawer-backdrop.open {
+      background: rgba(255, 255, 255, 0);
+      pointer-events: all;
+    }
+
+    /* ═══════════════════════════════════
+       SLIDE-IN DRAWER
+    ═══════════════════════════════════ */
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: var(--drawer-w);
+      height: 100vh;
+      background: var(--bg);
+      z-index: 1001;
+      box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+      transform: translateX(100%);
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .side-drawer.open {
+      transform: translateX(0);
+    }
+
+    /* Drawer header */
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .drawer-header-logo {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-weight: 700; font-size: 1rem; letter-spacing: -0.03em; color: var(--ink);
+      text-decoration: none;
+    }
+    .drawer-close {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid var(--border); background: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--ink); font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+    .drawer-close:hover { background: var(--hover-bg); }
+
+    /* Drawer body */
+    .drawer-body {
+      flex: 1; overflow-y: auto; padding: 1rem 0;
+    }
+
+    /* Section labels */
+    .drawer-section-label {
+      font-size: 0.65rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.75rem 1.5rem 0.3rem;
+    }
+
+    .drawer-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.7rem 1.5rem; font-size: 0.85rem;
+      font-weight: 500; color: var(--ink); text-decoration: none;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .drawer-link:hover { background: var(--hover-bg); }
+    .drawer-link i {
+      width: 18px; text-align: center;
+      color: var(--muted); font-size: 0.82rem;
+    }
+    .drawer-link .badge {
+      margin-left: auto; background: var(--accent);
+      color: white; font-size: 0.6rem; font-weight: 700;
+      padding: 0.15rem 0.45rem; border-radius: 2rem;
+    }
+
+    .drawer-divider {
+      height: 1px; background: var(--border);
+      margin: 0.75rem 1.5rem;
+    }
+
+    /* Auth buttons at bottom */
+    .drawer-footer {
+      padding: 1rem 1.5rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .drawer-btn {
+      display: block; width: 100%; padding: 0.7rem 1rem;
+      border-radius: 0.75rem; font-family: var(--font);
+      font-size: 0.82rem; font-weight: 600;
+      text-align: center; text-decoration: none;
+      cursor: pointer; border: none; transition: all 0.18s;
+    }
+    .drawer-btn-outline {
+      background: none; border: 1.5px solid var(--border); color: var(--ink);
+    }
+    .drawer-btn-outline:hover { background: var(--hover-bg); }
+    .drawer-btn-fill {
+      background: var(--accent); color: white;
+    }
+    .drawer-btn-fill:hover { background: #30663f; }
+
+    /* Active link state */
+    .drawer-link.active {
+      background: #f0f7f3; color: var(--accent);
+    }
+    .drawer-link.active i { color: var(--accent); }
   </style>
 </head>
 <body>
 
+<!-- ── BACKDROP ── -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<!-- ── SIDE DRAWER ── -->
+<div class="side-drawer" id="sideDrawer">
+  <div class="drawer-header">
+    <a class="drawer-header-logo" href="/">
+      <div class="logo-icon" style="width:26px;height:26px;">
+        <i class="fa-solid fa-leaf" style="font-size:0.7rem;"></i>
+      </div>
+      earthy<span style="color:var(--accent)">.</span>
+    </a>
+    <button class="drawer-close" id="drawerClose">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+
+    <% if(currUser){ %>
+    <!-- ── LOGGED IN ── -->
+    <div class="drawer-section-label">My Account</div>
+    <a class="drawer-link active" href="/my-bookings">
+      <i class="fa-solid fa-calendar-check"></i> My Bookings
+    </a>
+    <a class="drawer-link" href="/settings">
+      <i class="fa-solid fa-gear"></i> Settings
+    </a>
+    <a class="drawer-link" href="/profile">
+      <i class="fa-solid fa-user-circle"></i> Profile
+    </a>
+
+    <div class="drawer-divider"></div>
+    <div class="drawer-section-label">Explore</div>
+    <a class="drawer-link" href="/listings">
+      <i class="fa-solid fa-compass"></i> Explore Stays
+    </a>
+    <a class="drawer-link" href="/listings/new">
+  <i class="fa-solid fa-house"></i> Become a Host
+</a>
+    <div class="drawer-divider"></div>
+    <div class="drawer-section-label">Support</div>
+    <a class="drawer-link" href="/help">
+      <i class="fa-solid fa-circle-question"></i> Help Center
+    </a>
+
+    <% } else { %>
+    <!-- ── LOGGED OUT ── -->
+    <div class="drawer-section-label">Explore</div>
+    <a class="drawer-link" href="/listings">
+      <i class="fa-solid fa-compass"></i> Explore Stays
+    </a>
+    <a class="drawer-link" href="/listings/new">
+     <i class="fa-solid fa-house"></i> Become a Host
+    </a>
+
+    <div class="drawer-divider"></div>
+    <div class="drawer-section-label">Discover</div>
+    <a class="drawer-link" href="#">
+      <i class="fa-solid fa-tree"></i> Nature Escapes
+    </a>
+    <a class="drawer-link" href="#">
+      <i class="fa-solid fa-water"></i> Beach Stays
+    </a>
+    <a class="drawer-link" href="#">
+      <i class="fa-solid fa-mountain"></i> Mountain Retreats
+    </a>
+    <% } %>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="drawer-footer">
+    <% if(currUser){ %>
+      <a href="/logout" class="drawer-btn drawer-btn-outline">
+        <i class="fa-solid fa-right-from-bracket" style="margin-right:0.4rem;"></i>Log Out
+      </a>
+    <% } else { %>
+      <a href="/signup" class="drawer-btn drawer-btn-fill">Sign up</a>
+      <a href="/login"  class="drawer-btn drawer-btn-outline">Log in</a>
+    <% } %>
+  </div>
+</div>
+
+<!-- ── NAVBAR ── -->
 <nav class="main-navbar">
   <div class="navbar-inner">
 
-    <!-- Logo: leaf icon in circle + wordmark -->
     <a class="nav-logo" href="/">
       <div class="logo-icon"><i class="fa-solid fa-leaf"></i></div>
       <span class="logo-text">earthy<span class="logo-dot">.</span></span>
     </a>
 
-    <!-- Search bar (desktop) — now with category chips in the middle -->
-    <div class="search-bar">
-      <div class="search-seg" style="flex: 1.2;">
-        <h6>Where</h6>
-        <small>Search destinations</small>
-      </div>
-
-      <!-- Category chips replacing the two date pickers in the middle -->
-      <div class="search-chips">
-        <div class="chip active"><i class="fa-solid fa-tree"></i> Nature</div>
-        <div class="chip"><i class="fa-solid fa-water"></i> Beach</div>
-        <div class="chip"><i class="fa-solid fa-mountain"></i> Mountains</div>
-      </div>
-
-     
-
-      
-    </div>
-
+    <!-- Search bar (desktop) -->
+   
     <!-- Right side -->
     <div class="nav-right">
       <a class="nav-text-link" href="/listings/new">Become a host</a>
       <div class="nav-divider"></div>
 
+      <!-- This now opens the side drawer -->
       <div class="auth-group" id="authToggle">
         <i class="fa-solid fa-bars"></i>
         <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
       </div>
-      <div class="nav-collapse" id="authMenu">
-        <% if(!currUser){ %>
-  <a href="/signup">Sign up</a>
-  <a href="/login">Log in</a>
-<% } else { %>
-  <a href="/logout">Log out</a>
-<% } %>
-
-    <a href="/listings">Explore Stays</a>
-      </div>
-
-
 
       <button class="nav-toggler" id="mobileToggler">
         <i class="fa-solid fa-bars"></i>
@@ -351,20 +378,10 @@
     <i class="fa-solid fa-magnifying-glass"></i>
     <span>Where to?</span>
   </div>
-
-  <!-- Mobile nav collapse -->
-  <div class="nav-collapse" id="mobileMenu" style="right: auto; left: 1rem;">
-    <a href="/listings">Explore</a>
-    <a href="/listings/new">Become a host</a>
-    <a href="/language">Language</a>
-    <hr style="margin: 0.4rem 0; border-color: var(--border);">
-    <a href="/signup">Sign up</a>
-    <a href="/login">Log in</a>
-  </div>
 </nav>
 
 <script>
-  // chip toggle
+  // ── Chip toggle ──
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
@@ -372,25 +389,32 @@
     });
   });
 
-  const authToggle = document.getElementById('authToggle');
-  const authMenu   = document.getElementById('authMenu');
-  authToggle.addEventListener('click', e => {
-    e.stopPropagation();
-    authMenu.classList.toggle('open');
-    document.getElementById('mobileMenu').classList.remove('open');
-  });
+  // ── Drawer logic ──
+  const drawer   = document.getElementById('sideDrawer');
+  const backdrop = document.getElementById('drawerBackdrop');
 
-  const mobileToggler = document.getElementById('mobileToggler');
-  const mobileMenu    = document.getElementById('mobileMenu');
-  mobileToggler.addEventListener('click', e => {
-    e.stopPropagation();
-    mobileMenu.classList.toggle('open');
-    authMenu.classList.remove('open');
-  });
+  function openDrawer() {
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
 
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.nav-collapse').forEach(m => m.classList.remove('open'));
+  document.getElementById('authToggle').addEventListener('click', e => {
+    e.stopPropagation();
+    openDrawer();
   });
+  document.getElementById('mobileToggler').addEventListener('click', e => {
+    e.stopPropagation();
+    openDrawer();
+  });
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 </script>
 
 </body>
